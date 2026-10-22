@@ -221,6 +221,7 @@
 
       <!-- SEKTOR 2: VŠECHNA MÍSTA KATALOG -->
       <section id="tab-places" class="tab-content hidden space-y-3 flex-1">
+        <div id="places-legend"></div>
         <div id="places-container" class="space-y-3">
           <!-- Dynamicky přes JS -->
         </div>
@@ -1079,6 +1080,51 @@
             `;
       }
 
+      // Tenký barevný proužek vlevo: gastro oranžově, výlety a zážitky zeleně
+      function catStripe(cat) {
+        const color = cat === "gastro" ? "bg-amber-300" : "bg-emerald-500";
+        return `<span class="absolute inset-y-0 left-0 w-1 ${color}" aria-hidden="true"></span>`;
+      }
+
+      // --- FILTR KATEGORIÍ (legenda) ---
+      let activeCat = null; // "zazitky" | "gastro" | null
+
+      function matchesFilter(cat) {
+        if (!activeCat) return true;
+        return activeCat === "gastro" ? cat === "gastro" : cat !== "gastro";
+      }
+
+      function setCatFilter(cat) {
+        activeCat = activeCat === cat ? null : cat;
+        renderDay(currentDay);
+        refreshPlaces();
+      }
+
+      function legendHtml() {
+        const btn = (key, color, tint, label) => {
+          const active = activeCat === key;
+          return `
+                    <button onclick="setCatFilter('${key}')" aria-pressed="${active}" class="flex items-center gap-1 px-2 py-1 rounded-full transition-colors ${active ? `text-slate-800 ${tint}` : "hover:text-slate-700"}">
+                        <span class="w-1 h-3 rounded-full ${color}"></span>${label}
+                    </button>`;
+        };
+        return `
+                <div class="cat-legend flex items-center justify-start gap-1 -ml-2 text-[11px] font-semibold text-slate-500">
+                    ${btn("zazitky", "bg-emerald-500", "bg-emerald-100", "Zážitky")}
+                    ${btn("gastro", "bg-amber-300", "bg-amber-100", "Gastro")}
+                    ${
+                      activeCat
+                        ? `<button onclick="setCatFilter(null)" class="w-5 h-5 flex items-center justify-center rounded-full bg-slate-200 text-slate-600 hover:bg-slate-300 transition-colors" aria-label="Zrušit filtr"><i class="fa-solid fa-xmark text-[10px]"></i></button>`
+                        : ""
+                    }
+                </div>`;
+      }
+
+      function emptyFilterHtml() {
+        const label = activeCat === "gastro" ? "Gastro" : "Zážitky";
+        return `<div class="bg-white/80 p-6 rounded-2xl text-center text-xs text-slate-400 border border-dashed border-slate-200">Žádné položky v kategorii ${label}.</div>`;
+      }
+
       function renderDay(dayKey) {
         const dayData = itinerary[dayKey];
         const dateStr = dayDates[dayKey];
@@ -1121,16 +1167,23 @@
                     </div>
                     <h2 class="text-lg font-extrabold leading-snug">${dayProgram || dayName}</h2>
                 </div>
+                ${legendHtml()}
             `;
 
-        dayData.items.forEach((item) => {
+        const visibleItems = dayData.items.filter((item) =>
+          matchesFilter(places.find((p) => p.id === item.id)?.cat),
+        );
+        if (visibleItems.length === 0) html += emptyFilterHtml();
+
+        visibleItems.forEach((item) => {
           const matchedPlace = places.find((p) => p.id === item.id);
           const uniqueToggleId = `toggle-${dayKey}-${Math.random().toString(36).substr(2, 5)}`;
           const key = itemKey(dayKey, item);
           const isDone = doneItems.has(key);
 
           html += `
-                    <div data-item-key="${key}" class="itin-card ${isDone ? "is-done" : ""} bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-teal-300">
+                    <div data-item-key="${key}" class="itin-card ${isDone ? "is-done" : ""} relative bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-teal-300">
+                        ${catStripe(matchedPlace?.cat)}
                         <div class="p-4 flex gap-3">
                             <button onclick="toggleItem('${key}')" class="check-box" role="checkbox" aria-checked="${isDone}" aria-label="Navštíveno">
                                 <i class="fa-solid fa-check"></i>
@@ -1248,11 +1301,13 @@
 
       function renderPlaces() {
         const container = document.getElementById("places-container");
-        let html = "";
-        places.forEach((p) => {
+        const visiblePlaces = places.filter((p) => matchesFilter(p.cat));
+        let html = visiblePlaces.length === 0 ? emptyFilterHtml() : "";
+        visiblePlaces.forEach((p) => {
           const uniqueToggleId = `place-toggle-${p.id}`;
           html += `
-                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="relative bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        ${catStripe(p.cat)}
                         <div class="p-4 space-y-2">
                             <div class="flex justify-between items-start gap-2">
                                 <button onclick="goToDay('${p.dayKey}')" class="bg-blue-50 text-blue-700 text-[11px] font-bold px-2.5 py-1 rounded-xl hover:bg-blue-100 transition-all text-left">
@@ -1300,7 +1355,8 @@
 
         gastroPlaces.forEach((p) => {
           html += `
-                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2.5">
+                    <div class="relative overflow-hidden bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2.5">
+                        ${catStripe(p.cat)}
                         <div class="flex justify-between items-start">
                             <div>
                                 <h3 class="text-base font-bold text-slate-800">${p.name}</h3>
@@ -1385,16 +1441,33 @@
       }
 
       // Vyhledávání v loupě
-      document.getElementById("search-input").addEventListener("input", (e) => {
-        const query = e.target.value.toLowerCase().trim();
+      // Seznam míst: legenda + buď výsledky hledání, nebo celý katalog
+      function refreshPlaces() {
+        document.getElementById("places-legend").innerHTML = legendHtml();
+        const query = document
+          .getElementById("search-input")
+          .value.toLowerCase()
+          .trim();
         if (query !== "") {
-          switchTab("places");
+          renderSearchResults(query);
+        } else {
+          renderPlaces();
+        }
+      }
+
+      document.getElementById("search-input").addEventListener("input", (e) => {
+        if (e.target.value.trim() !== "") switchTab("places");
+        refreshPlaces();
+      });
+
+      function renderSearchResults(query) {
           const filtered = places.filter(
             (p) =>
-              p.name.toLowerCase().includes(query) ||
-              p.mustDo.toLowerCase().includes(query) ||
-              p.address.toLowerCase().includes(query) ||
-              p.dayInfo.toLowerCase().includes(query),
+              matchesFilter(p.cat) &&
+              (p.name.toLowerCase().includes(query) ||
+                p.mustDo.toLowerCase().includes(query) ||
+                p.address.toLowerCase().includes(query) ||
+                p.dayInfo.toLowerCase().includes(query)),
           );
           const container = document.getElementById("places-container");
           if (filtered.length === 0) {
@@ -1404,7 +1477,8 @@
           let html = "";
           filtered.forEach((p) => {
             html += `
-                        <div class="bg-white p-4 rounded-2xl border border-teal-300 shadow-md space-y-2">
+                        <div class="relative overflow-hidden bg-white p-4 rounded-2xl border border-teal-300 shadow-md space-y-2">
+                            ${catStripe(p.cat)}
                             <div class="flex justify-between items-start gap-2">
                                 <button onclick="goToDay('${p.dayKey}')" class="bg-blue-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl shadow-sm hover:bg-blue-700 transition-all text-left">
                                     🗓️ Naplánováno: ${p.dayInfo} ➔
@@ -1422,14 +1496,11 @@
                     `;
           });
           container.innerHTML = html;
-        } else {
-          renderPlaces();
-        }
-      });
+      }
 
       // Inicializace s nahráním předpovědi pro všechny dny
       fetchDailyWeather();
-      renderPlaces();
+      refreshPlaces();
       renderGastroList();
       renderNotes();
       updateProgress();
