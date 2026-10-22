@@ -376,19 +376,19 @@ export const places = [
     category: "atrakce",
     priority: 2,
     intro:
-      "Zážitek z pravěké vesnice (Museo delle Palafitte) je interaktivní a hravý. K tomu pohodová, bezpečná jízda na vypůjčených kolech podél krásného jezera.",
+      "Zážitek z pravěké vesnice (Museo delle Palafitte) je interaktivní a hravý. K tomu pohodová jízda na vypůjčených kolech kolem krásného jezera.",
     address: "Molina di Ledro (Via al Lago 1)",
     mustDo:
       "Pravěké kůlové domky Museo delle Palafitte + 10km okruh kolem jezera na kolech",
-    price: "Půjčení kol: dospělý cca 20–25 €/den, dítě 15–20 €/den",
+    price: "Půjčení kol na 2–4 h: cca 8–20 € za kolo (celý den se nevyplatí)",
     mapsQuery:
       "Museo delle Palafitte del Lago di Ledro, Via al Lago 1, Molina di Ledro",
-    duration: "celý den",
+    duration: "celý den, z toho okruh na kole cca 2 h s dětmi",
     guestCard: "Vstup do Museo delle Palafitte (kůlové stavby UNESCO) zdarma.",
     tips: [
       "Klidnější rodinné jezero s průzračnou, křišťálově čistou vodou.",
-      "Dětská kola a vozíky půjčuje Beach & Bike Rent (Molina di Ledro), kola také E-bike Ledro (Tiarno).",
-      "Cyklostezka je rovinatá a bez aut.",
+      "Dětská kola a vozíky půjčuje Beach & Bike Rent u muzea v Molina di Ledro (do 31. 10. denně 9:00–18:30), kola také E-bike Ledro (Tiarno).",
+      "Okruh má 9,6 km a je převážně rovinatý. Mezi Molinou a Pieve vede po silnici — s dětmi jeďte raději po jižním břehu po štěrkové cestě.",
       "Při chladnějším počasí fouká od jezera.",
     ],
     keywords: ["kolo", "kola", "kole", "cyklo", "cyklovýlet", "bike", "e-bike"],
