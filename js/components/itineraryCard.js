@@ -1,6 +1,6 @@
 import { html } from "../utils/html.js";
 import { categoryStripe } from "./category.js";
-import { mustDoBox, plannedButton, priceLine, prosCons } from "./place.js";
+import { mustDoBox, priceLine, prosCons } from "./place.js";
 import {
   CARD_CLASS,
   addressLine,
@@ -48,12 +48,11 @@ export function itineraryCard({ key, item, place, done, detailsId }) {
     <div class="p-4 flex gap-3">
       ${checkBox(key, done)}
       <div class="dim-when-done flex-1 min-w-0 space-y-2">
-        <div class="flex justify-between items-start gap-2">
+        <div class="flex">
           <span
-            class="bg-teal-50 text-teal-700 text-[11px] font-bold px-2.5 py-1 rounded-xl shrink-0"
+            class="bg-teal-50 text-teal-700 text-[11px] font-bold px-2.5 py-1 rounded-xl"
             >${item.time}</span
           >
-          ${place ? plannedButton(place, "badge") : ""}
         </div>
         ${item.drive ? routeInfo(item) : ""}
         <div>

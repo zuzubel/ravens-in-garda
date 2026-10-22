@@ -1,6 +1,13 @@
 import { html } from "../utils/html.js";
 import { categoryStripe } from "./category.js";
-import { mustDoBox, plannedButton, priceLine, prosCons } from "./place.js";
+import {
+  bestsellersBox,
+  mustDoBox,
+  placeBadge,
+  plannedButton,
+  priceLine,
+  prosCons,
+} from "./place.js";
 import {
   CARD_CLASS,
   addressLine,
@@ -20,13 +27,19 @@ export function placeCard(place, { highlighted = false } = {}) {
     ${categoryStripe(place.category)}
     <div class="p-4 space-y-2">
       <div class="flex justify-between items-start gap-2">
-        ${plannedButton(place, "chip")} ${mapLink(place.mapsUrl)}
+        ${plannedButton(place)} ${mapLink(place.mapsUrl)}
       </div>
       <div>
+        ${place.badge ? placeBadge(place.badge) : ""}
         <h3 class="text-base font-bold text-slate-800">${place.name}</h3>
         ${addressLine(place.address)}
       </div>
-      ${mustDoBox(place.mustDo)}
+      ${place.description
+        ? html`<p class="text-xs text-slate-600">${place.description}</p>`
+        : ""}
+      ${place.bestsellers
+        ? bestsellersBox(place.bestsellers)
+        : mustDoBox(place.mustDo)}
     </div>
     ${detailsPanel(
       detailsId,

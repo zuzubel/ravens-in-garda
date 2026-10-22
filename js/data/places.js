@@ -1,5 +1,6 @@
 // Katalog míst. `category`: "gastro" | "atrakce" | "příroda" | "památky" | "město"
-// Volitelné `highlight` zobrazí místo jako zvýrazněnou kartu nahoře v gastro záložce.
+// Volitelné doplňky karty v katalogu: `badge` (štítek nad názvem), `description` (popis)
+// a `bestsellers` (seznam z recenzí — na kartě nahradí řádek s `mustDo`).
 // Volitelné `keywords` jsou skrytá klíčová slova — na kartě nejsou vidět, ale najde je vyhledávání.
 export const places = [
   {
@@ -16,25 +17,23 @@ export const places = [
     price: "Cca 10–15 € za sladkosti a kávu pro celou rodinu",
     mapsUrl: "https://maps.app.goo.gl/q7V3nYP8tKJWQ5sT9",
     keywords: ["pekarna", "pekárna", "pečivo"],
-    highlight: {
-      badge: "🏆 Vítěz na Cornetti",
-      description:
-        "Čerstvě pečené italské croissanty (cornetti) plněné bohatou porcí krému těsně před podáváním.",
-      bestsellers: [
-        {
-          name: "Cornetto al Pistacchio",
-          note: "Hustý pistáciový krém (absolutní hit!)",
-        },
-        {
-          name: "Cornetto alla Nutella / Cioccolato",
-          note: "Nejoblíbenější u dětí",
-        },
-        {
-          name: "Čerstvá Focaccia",
-          note: "Slané pečivo ideální na svačinku",
-        },
-      ],
-    },
+    badge: "🏆 Vítěz na Cornetti",
+    description:
+      "Čerstvě pečené italské croissanty (cornetti) plněné bohatou porcí krému těsně před podáváním.",
+    bestsellers: [
+      {
+        name: "Cornetto al Pistacchio",
+        note: "Hustý pistáciový krém (absolutní hit!)",
+      },
+      {
+        name: "Cornetto alla Nutella / Cioccolato",
+        note: "Nejoblíbenější u dětí",
+      },
+      {
+        name: "Čerstvá Focaccia",
+        note: "Slané pečivo ideální na svačinku",
+      },
+    ],
   },
   {
     id: "bastione",

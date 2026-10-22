@@ -11,6 +11,8 @@ const SEARCH_FIELDS = ["name", "mustDo", "address", "dayInfo"];
 function matchesSearch(place, query) {
   const texts = [
     ...SEARCH_FIELDS.map((field) => place[field]),
+    place.description ?? "",
+    ...(place.bestsellers ?? []).flatMap(({ name, note }) => [name, note]),
     ...(place.keywords ?? []),
   ];
   return texts.some((text) => text.toLowerCase().includes(query));

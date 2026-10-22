@@ -24,7 +24,6 @@ export const TABS = [
     label: "Všechna Místa (Katalog)",
     icon: "fa-solid fa-map-pin",
   },
-  { key: "croissants", label: "Cornetti & Gastro", emoji: "🥐" },
   { key: "gallery", label: "Galerie Míst", emoji: "🖼️" },
   { key: "notes", label: "Poznámky", emoji: "📝" },
 ];

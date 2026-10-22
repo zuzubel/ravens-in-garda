@@ -11,7 +11,6 @@ import {
   toggleDone,
 } from "./state.js";
 import { renderGallery } from "./views/gallery.js";
-import { renderGastro } from "./views/gastro.js";
 import { renderNavigation } from "./views/navigation.js";
 import { renderNotes } from "./views/notes.js";
 import { renderPlaces } from "./views/places.js";
@@ -119,7 +118,6 @@ async function loadWeather() {
 renderNavigation();
 renderPlan();
 renderPlaces();
-renderGastro();
 renderGallery();
 renderNotes();
 renderHeaderProgress();

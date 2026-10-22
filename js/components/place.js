@@ -1,12 +1,32 @@
-// Části karty místa, které se opakují v itineráři, katalogu i gastro záložce
+// Části karty místa, které se opakují v itineráři a katalogu
 import { html } from "../utils/html.js";
 
-export function mustDoBox(text, label = "💡 Co vyzkoušet & Bestseller:") {
+export function mustDoBox(text) {
   return html` <div
     class="bg-amber-50 p-2.5 rounded-xl border border-amber-200/60 text-xs text-amber-900"
   >
-    <strong>${label}</strong> ${text}
+    <strong>💡 Co vyzkoušet & Bestseller:</strong> ${text}
   </div>`;
+}
+
+export function bestsellersBox(bestsellers) {
+  return html` <div
+    class="bg-amber-50 p-2.5 rounded-xl border border-amber-200/60 space-y-1.5"
+  >
+    <p class="text-xs font-bold text-amber-900">⭐ Bestsellery z recenzí:</p>
+    <ul class="text-xs text-amber-800 space-y-1 list-disc list-inside">
+      ${bestsellers.map(
+        ({ name, note }) => html`<li><strong>${name}:</strong> ${note}</li>`,
+      )}
+    </ul>
+  </div>`;
+}
+
+export function placeBadge(text) {
+  return html`<span
+    class="inline-block mb-1 bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide"
+    >${text}</span
+  >`;
 }
 
 export function prosCons(place) {
@@ -28,26 +48,13 @@ export function priceLine(place) {
   </div>`;
 }
 
-// Odkaz na den, kdy je místo naplánované, ve třech velikostech
-const PLANNED_VARIANTS = {
-  badge: "bg-blue-50 text-blue-700 text-[10px] px-2 py-1 rounded-lg text-right",
-  chip: "bg-blue-50 text-blue-700 text-[11px] px-2.5 py-1 rounded-xl text-left",
-  block:
-    "w-full bg-blue-50 text-blue-700 p-2 rounded-xl text-xs flex items-center justify-center gap-1",
-};
-
-export function plannedButton(place, variant = "chip") {
-  const label =
-    variant === "badge"
-      ? "🗓️ Naplánováno"
-      : `🗓️ Naplánováno: ${place.dayInfo} ➔`;
+// Odkaz z katalogu na den, kdy je místo naplánované
+export function plannedButton(place) {
   return html` <button
     data-action="go-to-day"
     data-day="${place.dayKey}"
-    class="${PLANNED_VARIANTS[
-      variant
-    ]} font-bold hover:bg-blue-100 transition-all"
+    class="bg-blue-50 text-blue-700 text-[11px] px-2.5 py-1 rounded-xl text-left font-bold hover:bg-blue-100 transition-all"
   >
-    ${label}
+    🗓️ Naplánováno: ${place.dayInfo} ➔
   </button>`;
 }
