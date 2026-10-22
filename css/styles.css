@@ -1,0 +1,61 @@
+/* Vlastní styly navíc k Tailwindu */
+
+html,
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Checkbox "navštíveno" u položek itineráře */
+.check-box {
+  width: 1.75rem;
+  height: 1.75rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #99f6e4;
+  border-radius: 0.6rem;
+  background: #fff;
+  color: transparent;
+  font-size: 0.8rem;
+  transition: all 0.15s ease;
+}
+.check-box:hover {
+  border-color: #14b8a6;
+}
+.check-box[aria-checked="true"] {
+  background: #0d9488;
+  border-color: #0d9488;
+  color: #fff;
+}
+
+/* Navštívená položka itineráře */
+.itin-card.is-done {
+  background: #f1f5f9;
+}
+.itin-card.is-done .dim-when-done {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+.itin-card.is-done h3 {
+  text-decoration: line-through;
+}
+
+/* Tlačítko rozbalovacích detailů: popisek a šipka podle aria-expanded */
+.details-toggle[aria-expanded="true"] .when-collapsed,
+.details-toggle[aria-expanded="false"] .when-expanded {
+  display: none;
+}
+.details-toggle[aria-expanded="true"] .fa-chevron-down {
+  transform: rotate(180deg);
+}
