@@ -8,3 +8,8 @@ export function formatShortDate(isoDate) {
 export function dayOfMonth(isoDate) {
   return Number(isoDate.split("-")[2]);
 }
+
+// { time: "16:00", until: "17:30" } → "16:00 – 17:30"; bez `until` jen začátek
+export function formatTimeRange({ time, until }) {
+  return until ? `${time} – ${until}` : time;
+}

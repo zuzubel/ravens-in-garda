@@ -52,6 +52,19 @@ body {
   text-decoration: line-through;
 }
 
+/* Krátké zvýraznění zastávky po přechodu z katalogu nebo pokroku */
+@keyframes card-flash {
+  from {
+    box-shadow: 0 0 0 3px #2dd4bf;
+  }
+  to {
+    box-shadow: 0 0 0 3px transparent;
+  }
+}
+.card.flash {
+  animation: card-flash 2s ease-out;
+}
+
 /* Tlačítko rozbalovacích detailů: popisek a šipka podle aria-expanded */
 .details-toggle[aria-expanded="true"] .when-collapsed,
 .details-toggle[aria-expanded="false"] .when-expanded {

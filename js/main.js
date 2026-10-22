@@ -9,13 +9,14 @@ import {
   state,
   toggleCategoryGroup,
   toggleDone,
+  toggleVisitedPlace,
 } from "./state.js";
 import { renderGallery } from "./views/gallery.js";
 import { renderHeader } from "./views/header.js";
 import { renderNavigation } from "./views/navigation.js";
 import { renderNotes } from "./views/notes.js";
 import { renderPlaces } from "./views/places.js";
-import { renderPlan, syncDoneState } from "./views/plan.js";
+import { renderPlan, revealItem, syncDoneState } from "./views/plan.js";
 import { renderHeaderProgress, renderProgress } from "./views/progress.js";
 
 function showTab(tab) {
@@ -55,6 +56,14 @@ const actions = {
     scrollToTop();
   },
 
+  // Z katalogu nebo pokroku přímo na zastávku v itineráři
+  "go-to-item": ({ day, key }) => {
+    state.dayKey = day;
+    showTab("plan");
+    renderPlan();
+    if (!revealItem(key)) scrollToTop();
+  },
+
   "open-progress": () => {
     showTab("progress");
     renderProgress();
@@ -66,6 +75,12 @@ const actions = {
     renderHeaderProgress();
     renderPlaces();
     if (state.tab === "progress") renderProgress();
+  },
+
+  // Gastro tip odškrtnutý v itineráři — označí místo v katalogu, do procent se nepočítá
+  "toggle-place": ({ key }) => {
+    syncDoneState(key, toggleVisitedPlace(key));
+    renderPlaces();
   },
 
   "toggle-details": (_, button) => toggleDetails(button),

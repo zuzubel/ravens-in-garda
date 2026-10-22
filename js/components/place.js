@@ -2,7 +2,7 @@
 import { CATEGORY_GROUPS, categoryGroupOf } from "../config.js";
 import { html } from "../utils/html.js";
 
-export function mustDoBox(text) {
+function mustDoBox(text) {
   return html` <div
     class="bg-amber-50 p-2.5 rounded-xl border border-amber-200/60 text-xs text-amber-900"
   >
@@ -10,7 +10,7 @@ export function mustDoBox(text) {
   </div>`;
 }
 
-export function bestsellersBox(bestsellers) {
+function bestsellersBox(bestsellers) {
   return html` <div
     class="bg-amber-50 p-2.5 rounded-xl border border-amber-200/60 space-y-1.5"
   >
@@ -43,32 +43,61 @@ export function placeBadge(text, category) {
   >`;
 }
 
-export function prosCons(place) {
-  return html` <div class="grid grid-cols-2 gap-2">
-    <div
-      class="bg-emerald-50 text-emerald-800 p-2 rounded-xl border border-emerald-100"
-    >
-      <strong>👍 Pro děti:</strong> ${place.pros}
-    </div>
-    <div class="bg-rose-50 text-rose-800 p-2 rounded-xl border border-rose-100">
-      <strong>⚠️ Mínusy:</strong> ${place.cons}
-    </div>
+// Tipy na kartě: seznam bestsellerů, pokud ho místo má, jinak řádek „Co vyzkoušet“
+export function tipsBox(place) {
+  return place.bestsellers
+    ? bestsellersBox(place.bestsellers)
+    : mustDoBox(place.mustDo);
+}
+
+function practicalTips(tips) {
+  return html` <div
+    class="bg-sky-50 text-sky-900 p-2.5 rounded-xl border border-sky-100 space-y-1"
+  >
+    <p class="font-bold">📌 Praktické tipy:</p>
+    <ul class="space-y-1 list-disc list-inside">
+      ${tips.map((tip) => html`<li>${tip}</li>`)}
+    </ul>
   </div>`;
 }
 
-export function priceLine(place) {
-  return html`<div class="text-[11px] text-slate-500">
-    💰 Ceník rodina: <strong>${place.price}</strong>
+// Fakta o návštěvě — zobrazí se jen ta, která místo v datech má
+const FACTS = [
+  { field: "price", label: "💰 Ceník rodina" },
+  { field: "duration", label: "⏱️ Časový odhad" },
+  { field: "guestCard", label: "🎫 Garda Guest Card" },
+];
+
+function placeFacts(place) {
+  return html` <div class="text-[11px] text-slate-500 space-y-0.5">
+    ${FACTS.filter(({ field }) => place[field]).map(
+      ({ field, label }) =>
+        html`<div>${label}: <strong>${place[field]}</strong></div>`,
+    )}
   </div>`;
 }
 
-// Odkaz z katalogu na den, kdy je místo naplánované
-export function plannedButton(place) {
+// Obsah rozbalovacích detailů místa — stejný v itineráři i v katalogu.
+// `withTipsBox: false`, když jsou tipy vidět už na kartě; `action` = tlačítko vpravo dole.
+export function placeDetailsContent(
+  place,
+  { withTipsBox = true, action = "" } = {},
+) {
+  return html` ${withTipsBox ? tipsBox(place) : ""}
+    ${place.tips ? practicalTips(place.tips) : ""}
+    <div class="flex justify-between items-end gap-2 pt-1">
+      ${placeFacts(place)} ${action}
+    </div>`;
+}
+
+// Odkaz z katalogu přímo na zastávku v itineráři
+export function plannedButton({ day, item, key }) {
   return html` <button
-    data-action="go-to-day"
-    data-day="${place.dayKey}"
+    data-action="go-to-item"
+    data-day="${day.key}"
+    data-key="${key}"
     class="bg-blue-50 text-blue-700 text-[11px] px-2.5 py-1 rounded-xl text-left font-bold hover:bg-blue-100 transition-all"
   >
-    🗓️ Naplánováno: ${place.dayInfo} ➔
+    🗓️ Naplánováno: ${day.name} ${item.time} ➔
   </button>`;
 }

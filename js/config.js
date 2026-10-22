@@ -17,7 +17,16 @@ export const WEATHER_LOCATION = {
 // Klíče v localStorage — neměnit, jinak se ztratí uložené odškrtnutí a poznámky
 export const STORAGE_KEYS = {
   doneItems: "garda_done_items",
+  visitedPlaces: "garda_visited_places",
   notes: "garda_user_notes",
+};
+
+// Lokality gastro podniků (`area` u místa, `diningAreas` u dne v itineráři)
+export const DINING_AREAS = {
+  riva: "Riva del Garda",
+  torbole: "Torbole",
+  limone: "Limone sul Garda",
+  arco: "Arco",
 };
 
 // Záložky hlavního menu. Stránka pokroku (progress) nemá vlastní záložku.

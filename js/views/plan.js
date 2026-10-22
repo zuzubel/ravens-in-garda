@@ -1,12 +1,15 @@
-// Záložka Itinerář: výběr dne, hlavička s počasím, legenda a karty programu
+// Záložka Itinerář: výběr dne, hlavička s počasím, legenda, karty programu a gastro tipy
 import { WEATHER_LOCATION } from "../config.js";
 import { categoryLegend, emptyCategoryState } from "../components/category.js";
+import { diningSection } from "../components/diningList.js";
 import { itineraryCard } from "../components/itineraryCard.js";
 import { itinerary } from "../data/itinerary.js";
 import {
+  diningGroups,
   findPlace,
   getDay,
   isDone,
+  isPlaceVisited,
   itemKey,
   matchesCategoryFilter,
   state,
@@ -97,20 +100,37 @@ export function renderPlan() {
       }),
     );
 
+  // Gastro tipy jsou gastro — při filtru „Zážitky“ se skryjí
+  const dining = matchesCategoryFilter("gastro") ? diningGroups(day) : [];
+
   mount("day-selector", daySelector(day.key));
   mount(
     "day-content",
-    html` ${dayHeader(day)} ${categoryLegend(state.categoryGroup)}
-    ${cards.length ? cards : emptyCategoryState(state.categoryGroup)}`,
+    html` ${dayHeader(day)} ${categoryLegend(state.categoryGroup)} ${cards}
+    ${dining.length ? diningSection(dining, isPlaceVisited) : ""}
+    ${cards.length || dining.length
+      ? ""
+      : emptyCategoryState(state.categoryGroup)}`,
   );
+}
+
+function findDoneCard(key) {
+  return document.querySelector(`[data-done-key="${CSS.escape(key)}"]`);
 }
 
 // Odškrtnutí přepne jen třídy na kartě — rozbalené detaily zůstanou otevřené
 export function syncDoneState(key, done) {
-  document
-    .querySelectorAll(`.itin-card[data-item-key="${CSS.escape(key)}"]`)
-    .forEach((card) => {
-      card.classList.toggle("is-done", done);
-      card.querySelector(".check-box").setAttribute("aria-checked", done);
-    });
+  const card = findDoneCard(key);
+  if (!card) return;
+  card.classList.toggle("is-done", done);
+  card.querySelector(".check-box").setAttribute("aria-checked", done);
+}
+
+// Sjede na zastávku a krátce ji zvýrazní; false, když karta není vidět (např. kvůli filtru)
+export function revealItem(key) {
+  const card = findDoneCard(key);
+  if (!card) return false;
+  card.scrollIntoView({ behavior: "smooth", block: "center" });
+  card.classList.add("flash");
+  return true;
 }

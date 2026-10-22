@@ -3,19 +3,26 @@ import { categoryLegend, emptyCategoryState } from "../components/category.js";
 import { placeCard } from "../components/placeCard.js";
 import { emptyState } from "../components/ui.js";
 import { places } from "../data/places.js";
-import { isPlaceVisited, matchesCategoryFilter, state } from "../state.js";
+import {
+  isPlaceVisited,
+  matchesCategoryFilter,
+  placeVisits,
+  state,
+} from "../state.js";
 import { mount } from "../utils/html.js";
 
-const SEARCH_FIELDS = ["name", "mustDo", "address", "dayInfo"];
+// Textová pole místa, ve kterých se hledá (chybějící se přeskočí)
+const SEARCH_FIELDS = ["name", "mustDo", "address", "intro", "guestCard"];
 
-function matchesSearch(place, query) {
+function matchesSearch(place, visits, query) {
   const texts = [
     ...SEARCH_FIELDS.map((field) => place[field]),
-    place.intro ?? "",
+    ...visits.map(({ day }) => day.name),
+    ...(place.tips ?? []),
     ...(place.bestsellers ?? []).flatMap(({ name, note }) => [name, note]),
     ...(place.keywords ?? []),
   ];
-  return texts.some((text) => text.toLowerCase().includes(query));
+  return texts.some((text) => text?.toLowerCase().includes(query));
 }
 
 // Místa s prioritou (1 = nejvyšší) první, ostatní za nimi v pořadí z dat
@@ -25,16 +32,18 @@ const byPriority = (a, b) =>
 
 function renderList(query) {
   const visible = places
+    .map((place) => ({ place, visits: placeVisits(place.id) }))
     .filter(
-      (place) =>
+      ({ place, visits }) =>
         matchesCategoryFilter(place.category) &&
-        (!query || matchesSearch(place, query)),
+        (!query || matchesSearch(place, visits, query)),
     )
-    .sort(byPriority);
+    .sort((a, b) => byPriority(a.place, b.place));
   if (visible.length) {
-    return visible.map((place) =>
+    return visible.map(({ place, visits }) =>
       placeCard(place, {
         highlighted: Boolean(query),
+        visits,
         visited: isPlaceVisited(place.id),
       }),
     );

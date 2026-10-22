@@ -14,9 +14,10 @@ export function emptyState(text) {
   </div>`;
 }
 
-export function checkBox(key, checked) {
+// Zaškrtávátko „navštíveno“: zastávka itineráře (toggle-done) nebo gastro tip (toggle-place)
+export function checkBox(key, checked, action = "toggle-done") {
   return html` <button
-    data-action="toggle-done"
+    data-action="${action}"
     data-key="${key}"
     class="check-box"
     role="checkbox"
@@ -73,7 +74,7 @@ export function detailsToggle(panelId, extraClass = "") {
     aria-expanded="false"
     class="${extraClass} details-toggle w-full bg-slate-100/80 hover:bg-slate-200/70 text-slate-700 py-2 px-4 text-xs font-bold flex items-center justify-between border-t border-slate-200/80 transition-all"
   >
-    <span class="when-collapsed">Zobrazit detaily & bestsellery</span>
+    <span class="when-collapsed">Zobrazit detaily</span>
     <span class="when-expanded">Skrýt detaily</span>
     <i
       class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"

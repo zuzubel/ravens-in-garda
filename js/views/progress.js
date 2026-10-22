@@ -2,7 +2,7 @@
 import { checkBox, emptyState } from "../components/ui.js";
 import { itinerary } from "../data/itinerary.js";
 import { getProgress, isDone, itemKey, state } from "../state.js";
-import { formatShortDate } from "../utils/date.js";
+import { formatShortDate, formatTimeRange } from "../utils/date.js";
 import { html, mount } from "../utils/html.js";
 
 function progressRow(day, item, done) {
@@ -12,8 +12,9 @@ function progressRow(day, item, done) {
   >
     ${checkBox(key, done)}
     <button
-      data-action="go-to-day"
+      data-action="go-to-item"
       data-day="${day.key}"
+      data-key="${key}"
       class="flex-1 min-w-0 text-left flex items-center gap-2"
     >
       <div class="flex-1 min-w-0">
@@ -24,7 +25,9 @@ function progressRow(day, item, done) {
         >
           ${item.name}
         </div>
-        <div class="text-[11px] text-slate-400 font-medium">${item.time}</div>
+        <div class="text-[11px] text-slate-400 font-medium">
+          ${formatTimeRange(item)}
+        </div>
       </div>
       <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
     </button>

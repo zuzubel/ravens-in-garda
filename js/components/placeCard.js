@@ -1,13 +1,11 @@
 import { html } from "../utils/html.js";
 import { categoryStripe } from "./category.js";
 import {
-  bestsellersBox,
-  mustDoBox,
   placeBadge,
+  placeDetailsContent,
   plannedButton,
+  tipsBox,
   visitedMark,
-  priceLine,
-  prosCons,
 } from "./place.js";
 import {
   CARD_CLASS,
@@ -16,12 +14,6 @@ import {
   detailsToggle,
   mapLink,
 } from "./ui.js";
-
-function tipsBox(place) {
-  return place.bestsellers
-    ? bestsellersBox(place.bestsellers)
-    : mustDoBox(place.mustDo);
-}
 
 // Řádek štítků nad názvem: háček navštíveno (nezešedne), priorita, vlastní štítek
 function cardTags(place, visited) {
@@ -38,11 +30,11 @@ function cardTags(place, visited) {
 }
 
 // Karta v katalogu míst; `highlighted` = výsledek vyhledávání,
-// `visited` = místo je v itineráři odškrtnuté (karta zešedne, jako v itineráři).
+// `visits` = zastávky místa v itineráři (odkazy „Naplánováno“), `visited` = karta zešedne.
 // Karta s úvodní větou (`intro`) ukazuje jen ji, tipy jsou až v rozbalovacích detailech.
 export function placeCard(
   place,
-  { highlighted = false, visited = false } = {},
+  { highlighted = false, visits = [], visited = false } = {},
 ) {
   const detailsId = `place-details-${place.id}`;
   return html` <div
@@ -52,8 +44,9 @@ export function placeCard(
   >
     ${categoryStripe(place.category)}
     <div class="p-4 space-y-2">
-      <div class="dim-when-done flex justify-between items-start gap-2">
-        ${plannedButton(place)} ${mapLink(place.mapsUrl)}
+      <div class="dim-when-done flex items-start gap-2">
+        <div class="flex flex-wrap gap-1.5">${visits.map(plannedButton)}</div>
+        <div class="ml-auto shrink-0">${mapLink(place.mapsUrl)}</div>
       </div>
       <div>
         ${cardTags(place, visited)}
@@ -72,8 +65,7 @@ export function placeCard(
     </div>
     ${detailsPanel(
       detailsId,
-      html`${place.intro ? tipsBox(place) : ""} ${prosCons(place)}
-        <div class="pt-1">${priceLine(place)}</div>`,
+      placeDetailsContent(place, { withTipsBox: Boolean(place.intro) }),
       "dim-when-done",
     )}
     ${detailsToggle(detailsId, "dim-when-done")}
