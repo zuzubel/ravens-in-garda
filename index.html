@@ -1,0 +1,1438 @@
+<!doctype html>
+<html lang="cs" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>Lago di Garda — Rodinná dovolená (Út–So)</title>
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3Crect width='1' height='2' fill='%23009246'/%3E%3Crect x='1' width='1' height='2' fill='%23fff'/%3E%3Crect x='2' width='1' height='2' fill='%23ce2b37'/%3E%3C/svg%3E"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+      html,
+      body {
+        min-height: 100vh;
+        min-height: 100dvh;
+        font-family: "Plus Jakarta Sans", sans-serif;
+      }
+      .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+
+      /* Checkbox "navštíveno" u položek itineráře */
+      .check-box {
+        width: 1.75rem;
+        height: 1.75rem;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #99f6e4;
+        border-radius: 0.6rem;
+        background: #fff;
+        color: transparent;
+        font-size: 0.8rem;
+        transition: all 0.15s ease;
+      }
+      .check-box:hover {
+        border-color: #14b8a6;
+      }
+      .check-box[aria-checked="true"] {
+        background: #0d9488;
+        border-color: #0d9488;
+        color: #fff;
+      }
+      .itin-card.is-done {
+        background: #f1f5f9;
+      }
+      .itin-card.is-done .dim-when-done {
+        opacity: 0.45;
+        filter: grayscale(1);
+      }
+      .itin-card.is-done h3 {
+        text-decoration: line-through;
+      }
+    </style>
+  </head>
+  <body class="bg-amber-50/40 text-slate-800 pb-16 min-h-screen flex flex-col">
+    <!-- Horní Lišta (Klikací na úvod) -->
+    <header
+      class="bg-gradient-to-r from-teal-700 via-teal-600 to-emerald-600 text-white p-5 shadow-lg sticky top-0 z-50 shrink-0"
+    >
+      <div class="max-w-xl mx-auto flex items-center justify-between">
+        <div onclick="goToDay('ut')" class="cursor-pointer group select-none">
+          <div class="flex items-center gap-2">
+            <span class="text-teal-200 text-xs font-medium"
+              >27. 10. — 31. 10.</span
+            >
+          </div>
+          <h1
+            class="text-2xl font-extrabold tracking-tight mt-0.5 group-hover:text-amber-200 transition-colors"
+          >
+            Lago di Garda 🇮🇹
+          </h1>
+          <a
+            href="https://maps.google.com/?q=Camping+Brione+Riva+del+Garda"
+            target="_blank"
+            class="bg-emerald-600/80 hover:bg-emerald-500 text-white px-2.5 py-1 rounded-xl text-xs font-bold shrink-0 flex flex-col items-start sm:flex-row sm:items-center gap-1"
+          >
+            <span class="flex items-center gap-1">
+              <i class="fa-solid fa-location-arrow"></i>
+              <span class="text-xs text-teal-100 mt-0.5"
+                ><strong>Camping Brione</strong></span
+              >
+            </span>
+            <span>Via Brione, 32, 38066 Riva del Garda TN, Itálie</span>
+          </a>
+        </div>
+        <button
+          onclick="openProgress()"
+          class="text-right bg-white/10 hover:bg-white/20 backdrop-blur-md p-2 rounded-2xl border border-white/20 transition-colors"
+          aria-label="Zobrazit navštívená a naplánovaná místa"
+        >
+          <span id="progress-percent" class="text-xl font-black text-amber-300"
+            >0%</span
+          >
+          <p class="text-[10px] uppercase text-teal-100 font-medium">
+            Splněno <i class="fa-solid fa-chevron-right text-[8px]"></i>
+          </p>
+        </button>
+      </div>
+    </header>
+
+    <!-- Hlavní obsah -->
+    <main class="max-w-xl mx-auto px-4 mt-4 w-full flex-1 flex flex-col">
+      <!-- VYHLEDÁVÁNÍ (LUPA) -->
+      <div class="relative mb-4 shrink-0">
+        <i
+          class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+        ></i>
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Hledat místo, město, km, cornetto, pizza, kolo..."
+          class="w-full pl-11 pr-4 py-3 bg-white rounded-2xl border border-slate-200 shadow-sm text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all"
+        />
+      </div>
+
+      <!-- TABY MENU -->
+      <div class="flex gap-2 overflow-x-auto hide-scrollbar pb-2 mb-4 shrink-0">
+        <button
+          onclick="switchTab('plan')"
+          id="btn-tab-plan"
+          class="tab-btn active bg-teal-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm flex items-center gap-2"
+        >
+          <i class="fa-regular fa-calendar-days"></i>
+          Itinerář (Út—So)
+        </button>
+        <button
+          onclick="switchTab('places')"
+          id="btn-tab-places"
+          class="tab-btn bg-white text-slate-600 border border-slate-200 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm flex items-center gap-2"
+        >
+          <i class="fa-solid fa-map-pin"></i>
+          Všechna Místa (Katalog)
+        </button>
+        <button
+          onclick="switchTab('croissants')"
+          id="btn-tab-croissants"
+          class="tab-btn bg-white text-slate-600 border border-slate-200 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm flex items-center gap-2"
+        >
+          🥐 Cornetti & Gastro
+        </button>
+        <button
+          onclick="switchTab('gallery')"
+          id="btn-tab-gallery"
+          class="tab-btn bg-white text-slate-600 border border-slate-200 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm flex items-center gap-2"
+        >
+          🖼️ Galerie Míst
+        </button>
+        <button
+          onclick="switchTab('notes')"
+          id="btn-tab-notes"
+          class="tab-btn bg-white text-slate-600 border border-slate-200 px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap shadow-sm flex items-center gap-2"
+        >
+          📝 Poznámky
+        </button>
+      </div>
+
+      <!-- SEKTOR 1: ITINERÁŘ DNY -->
+      <section id="tab-plan" class="tab-content space-y-4 flex-1">
+        <!-- Dny taby -->
+        <div
+          class="flex justify-between bg-white p-1 rounded-2xl border border-slate-200 shadow-sm mb-3"
+        >
+          <button
+            onclick="switchDay('ut')"
+            id="day-btn-ut"
+            class="day-btn flex-1 py-2 text-center text-xs font-bold rounded-xl bg-teal-700 text-white transition-all"
+          >
+            Út 27.
+          </button>
+          <button
+            onclick="switchDay('st')"
+            id="day-btn-st"
+            class="day-btn flex-1 py-2 text-center text-xs font-bold rounded-xl text-slate-500 transition-all"
+          >
+            St 28.
+          </button>
+          <button
+            onclick="switchDay('ct')"
+            id="day-btn-ct"
+            class="day-btn flex-1 py-2 text-center text-xs font-bold rounded-xl text-slate-500 transition-all"
+          >
+            Čt 29.
+          </button>
+          <button
+            onclick="switchDay('pa')"
+            id="day-btn-pa"
+            class="day-btn flex-1 py-2 text-center text-xs font-bold rounded-xl text-slate-500 transition-all"
+          >
+            Pá 30.
+          </button>
+          <button
+            onclick="switchDay('so')"
+            id="day-btn-so"
+            class="day-btn flex-1 py-2 text-center text-xs font-bold rounded-xl text-slate-500 transition-all"
+          >
+            So 31.
+          </button>
+        </div>
+
+        <!-- DEN DETAIL DYNAMICKY -->
+        <div id="day-content" class="space-y-4">
+          <!-- Vkládá se dynamicky skrze JS -->
+        </div>
+      </section>
+
+      <!-- SEKTOR 2: VŠECHNA MÍSTA KATALOG -->
+      <section id="tab-places" class="tab-content hidden space-y-3 flex-1">
+        <div id="places-container" class="space-y-3">
+          <!-- Dynamicky přes JS -->
+        </div>
+      </section>
+
+      <!-- SEKTOR 3: CROISSANTY & GASTRO BESTSELLERY -->
+      <section id="tab-croissants" class="tab-content hidden space-y-4 flex-1">
+        <div
+          class="bg-gradient-to-br from-amber-500 to-orange-600 text-white p-5 rounded-3xl shadow-md"
+        >
+          <div class="flex items-center gap-3">
+            <span class="text-4xl">🥐</span>
+            <div>
+              <h2 class="text-xl font-extrabold">
+                Gastro Bestsellery & Cornetti
+              </h2>
+              <p class="text-xs text-amber-100">
+                Nejlepší jídlo, zmrzliny a croissanty z recenzí
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- DelPane Highlight -->
+        <div
+          class="bg-white p-4 rounded-2xl border border-amber-300 shadow-sm space-y-3"
+        >
+          <div class="flex justify-between items-start">
+            <div>
+              <span
+                class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide"
+                >🏆 Vítěz na Cornetti</span
+              >
+              <h3 class="text-base font-bold text-slate-800 mt-1">
+                DelPane Bakery (Riva del Garda)
+              </h3>
+              <p class="text-xs text-slate-500">
+                <i class="fa-solid fa-location-dot text-rose-500 mr-1"></i>Via
+                Heinrich E. Thomas Mann, Riva del Garda
+              </p>
+            </div>
+            <a
+              href="https://maps.app.goo.gl/q7V3nYP8tKJWQ5sT9"
+              target="_blank"
+              class="bg-teal-50 text-teal-700 p-2 rounded-xl text-xs font-bold flex items-center gap-1 shrink-0"
+            >
+              <i class="fa-solid fa-location-arrow"></i> Mapa
+            </a>
+          </div>
+          <p class="text-xs text-slate-600">
+            Čerstvě pečené italské croissanty (cornetti) plněné bohatou porcí
+            krému těsně před podáváním.
+          </p>
+
+          <div
+            class="bg-amber-50 p-3 rounded-xl border border-amber-200/60 space-y-1.5"
+          >
+            <p class="text-xs font-bold text-amber-900">
+              ⭐ Bestsellery z recenzí:
+            </p>
+            <ul class="text-xs text-amber-800 space-y-1 list-disc list-inside">
+              <li>
+                <strong>Cornetto al Pistacchio:</strong> Hustý pistáciový krém
+                (absolutní hit!)
+              </li>
+              <li>
+                <strong>Cornetto alla Nutella / Cioccolato:</strong>
+                Nejoblíbenější u dětí
+              </li>
+              <li>
+                <strong>Čerstvá Focaccia:</strong> Slané pečivo ideální na
+                svačinku
+              </li>
+            </ul>
+          </div>
+          <button
+            onclick="goToDay('ut')"
+            class="w-full bg-blue-50 text-blue-700 p-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 hover:bg-blue-100 transition-all"
+          >
+            <i class="fa-regular fa-calendar-check"></i> Naplánováno: Úterý
+            (Odpoledne) & Sobota (Ráno)
+          </button>
+        </div>
+
+        <!-- Ostatní Gastro Bestsellery -->
+        <div id="gastro-list" class="space-y-3">
+          <!-- Dynamicky doplněno z JS -->
+        </div>
+      </section>
+
+      <!-- SEKTOR 4: GALERIE MÍST -->
+      <section id="tab-gallery" class="tab-content hidden space-y-4 flex-1">
+        <div
+          class="bg-gradient-to-br from-blue-600 to-teal-700 text-white p-5 rounded-3xl shadow-md space-y-2"
+        >
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">📸</span>
+            <h2 class="text-xl font-extrabold">Rodinné Fotky z Gardy</h2>
+          </div>
+          <p class="text-xs text-blue-100">
+            Sdílené vzpomínky a fotky z naší dovolené.
+          </p>
+
+          <!-- Tlačítko na Apple Sdílené Album -->
+          <a
+            href="https://www.icloud.com/photos/"
+            target="_blank"
+            class="mt-2 inline-flex items-center justify-center gap-2 w-full bg-white text-blue-700 font-bold text-xs py-2.5 px-4 rounded-2xl shadow-sm hover:bg-blue-50 transition-all"
+          >
+            <i class="fa-brands fa-apple text-base"></i> Otevřít Společné Album
+            na iCloudu ➔
+          </a>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div
+            class="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm space-y-1.5"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=400&q=80"
+              alt="Lago di Garda"
+              class="w-full h-28 object-cover rounded-xl"
+            />
+            <p class="text-xs font-bold text-slate-800 text-center">
+              Riva del Garda
+            </p>
+          </div>
+          <div
+            class="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm space-y-1.5"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?auto=format&fit=crop&w=400&q=80"
+              alt="Limone sul Garda"
+              class="w-full h-28 object-cover rounded-xl"
+            />
+            <p class="text-xs font-bold text-slate-800 text-center">
+              Limone sul Garda
+            </p>
+          </div>
+          <div
+            class="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm space-y-1.5"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80"
+              alt="Monte Baldo"
+              class="w-full h-28 object-cover rounded-xl"
+            />
+            <p class="text-xs font-bold text-slate-800 text-center">
+              Monte Baldo
+            </p>
+          </div>
+          <div
+            class="bg-white p-2 rounded-2xl border border-slate-200 shadow-sm space-y-1.5"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=400&q=80"
+              alt="Lago di Tenno"
+              class="w-full h-28 object-cover rounded-xl"
+            />
+            <p class="text-xs font-bold text-slate-800 text-center">
+              Lago di Tenno
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SEKTOR 5: POZNÁMKY & TIPY -->
+      <section id="tab-notes" class="tab-content hidden space-y-4 flex-1">
+        <div
+          class="bg-gradient-to-br from-teal-700 to-emerald-800 text-white p-5 rounded-3xl shadow-md space-y-1"
+        >
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">📝</span>
+            <h2 class="text-xl font-extrabold">Moje Poznámky & Nápady</h2>
+          </div>
+          <p class="text-xs text-teal-100">
+            Připište si další místa, nákupní seznam nebo připomínky. Poznámky se
+            automaticky ukládají ve vašem telefonu.
+          </p>
+        </div>
+
+        <!-- Formulář pro přidání -->
+        <div
+          class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-3"
+        >
+          <textarea
+            id="note-input"
+            rows="3"
+            placeholder="Napište sem poznámku, nápad na výlet nebo restauraci..."
+            class="w-full p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-teal-500 transition-all"
+          ></textarea>
+          <button
+            onclick="addNote()"
+            class="w-full bg-teal-700 hover:bg-teal-800 text-white p-2.5 rounded-xl text-xs font-bold flex items-center justify-center gap-2 transition-all shadow-sm"
+          >
+            <i class="fa-solid fa-plus"></i> Přidat poznámku
+          </button>
+        </div>
+
+        <!-- Seznam uložených poznámek -->
+        <div id="notes-list" class="space-y-2.5">
+          <!-- Načte se dynamicky z localStorage -->
+        </div>
+      </section>
+
+      <!-- SEKTOR 6: POKROK (otevírá se klikem na % Splněno) -->
+      <section id="tab-progress" class="tab-content hidden space-y-4 flex-1">
+        <div id="progress-content" class="space-y-4">
+          <!-- Dynamicky přes JS -->
+        </div>
+      </section>
+    </main>
+
+    <!-- JS LOGIKA KÓDU -->
+    <script>
+      // Datumy pro jednotlivé dny itineráře (27.10. - 31.10.)
+      const dayDates = {
+        ut: "2026-10-27",
+        st: "2026-10-28",
+        ct: "2026-10-29",
+        pa: "2026-10-30",
+        so: "2026-10-31",
+      };
+
+      // Objekt s načteným počasím pro dny
+      let weatherDataMap = {};
+      // 'loading' | 'done' | 'error'
+      let weatherStatus = "loading";
+
+      async function fetchDailyWeather() {
+        const lat = 45.8858; // Riva del Garda
+        const lon = 10.8422;
+        try {
+          // forecast_days=16 (maximum) — výchozí je jen 7 dní, takže pozdější dny výletu chyběly
+          const res = await fetch(
+            `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=Europe%2FBerlin&forecast_days=16`,
+          );
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const data = await res.json();
+          if (data && data.daily) {
+            data.daily.time.forEach((dateStr, idx) => {
+              const code = data.daily.weathercode[idx];
+              // Font Awesome ikony místo emoji (emoji mlhy se na Applu kreslí jako šedý rámeček)
+              let icon = "fa-sun text-amber-300";
+              let desc = "Slunečno";
+
+              if (code === 1 || code === 2) {
+                icon = "fa-cloud-sun text-amber-200";
+                desc = "Polojasno";
+              } else if (code === 3) {
+                icon = "fa-cloud text-teal-100";
+                desc = "Zataženo";
+              } else if (code >= 45 && code <= 48) {
+                icon = "fa-smog text-teal-100";
+                desc = "Mlha";
+              } else if (code >= 51 && code <= 67) {
+                icon = "fa-cloud-rain text-sky-300";
+                desc = "Déšť";
+              } else if (code >= 71 && code <= 77) {
+                icon = "fa-snowflake text-sky-100";
+                desc = "Sněžení";
+              } else if (code >= 80 && code <= 82) {
+                icon = "fa-cloud-showers-heavy text-sky-300";
+                desc = "Přeháňky";
+              } else if (code === 85 || code === 86) {
+                icon = "fa-snowflake text-sky-100";
+                desc = "Sněhové přeháňky";
+              } else if (code >= 95) {
+                icon = "fa-cloud-bolt text-amber-300";
+                desc = "Bouřky";
+              }
+
+              weatherDataMap[dateStr] = {
+                maxTemp: Math.round(data.daily.temperature_2m_max[idx]),
+                minTemp: Math.round(data.daily.temperature_2m_min[idx]),
+                precip: data.daily.precipitation_sum[idx],
+                icon: icon,
+                desc: desc,
+              };
+            });
+          }
+          weatherStatus = "done";
+        } catch (e) {
+          console.log("Chyba při načítání počasí:", e);
+          weatherStatus = "error";
+        }
+        renderDay(currentDay);
+      }
+
+      const places = [
+        {
+          id: "delpane",
+          name: "DelPane Bakery",
+          cat: "gastro",
+          dayKey: "ut",
+          dayInfo: "Úterý (Odpo) & Sobota (Ráno)",
+          address: "Riva del Garda (Via Heinrich E. Thomas Mann)",
+          mustDo:
+            "Cornetto al Pistacchio (pistáciový krém plněný na místě) & čerstvá Focaccia",
+          pros: "Nejlepší plněné croissanty v okolí, výběrová káva pro rodiče.",
+          cons: "Ráno bývá občas kratší fronta.",
+          price: "Cca 10–15 € za sladkosti a kávu pro celou rodinu",
+          maps: "https://maps.app.goo.gl/q7V3nYP8tKJWQ5sT9",
+        },
+        {
+          id: "bastione",
+          name: "Bastione di Riva & Skleněný Výtah",
+          cat: "atrakce",
+          dayKey: "ut",
+          dayInfo: "Úterý (Podvečer)",
+          address: "Riva del Garda (Via Bastione)",
+          mustDo: "Jízda panoramatickým skleněným výtahem & výhled na jezero",
+          pros: "Obrovský zážitek z jízdy výtahem s průhlednou podlahou.",
+          cons: "Nahoře je spíše jen plošina s kavárnou.",
+          price: "Cca 12–16 € rodina",
+          maps: "https://maps.app.goo.gl/DF9AomPn5KQ4M8NCA",
+        },
+        {
+          id: "pini",
+          name: "Bar dei pini",
+          cat: "gastro",
+          dayKey: "ut",
+          dayInfo: "Úterý (Podvečer)",
+          address: "Riva del Garda (Viale Rovereto 31)",
+          mustDo: "Caffè Shakerato, Aperol Spritz & relax na pláži u vody",
+          pros: "Trávník hned u vody, holčičky si mohou bezpečně poběhat v parku.",
+          cons: "Při západu slunce bývá plněji.",
+          price: "Cca 10–18 €",
+          maps: "https://maps.app.goo.gl/x8T5d1v2eXN2",
+        },
+        {
+          id: "leondoro",
+          name: "Ristorante Pizzeria Leon d'Oro",
+          cat: "gastro",
+          dayKey: "ut",
+          dayInfo: "Úterý (Večeře)",
+          address: "Riva del Garda (Via Fiume 28)",
+          mustDo: "Pizza Leon d'Oro, Pizza Frutti di Mare & dětská Margherita",
+          pros: "Tradiční pizzerie v centru, přátelská k dětem.",
+          cons: "Vynikající pizzerie, večer doporučujeme rezervaci.",
+          price: "Cca 45–60 € rodina",
+          maps: "https://maps.app.goo.gl/Y5uJ1qL3",
+        },
+        {
+          id: "funivia",
+          name: "Funivia Malcesine-Monte Baldo",
+          cat: "atrakce",
+          dayKey: "st",
+          dayInfo: "Středa (Dopoledne)",
+          address: "Malcesine (Via Navene 1)",
+          mustDo:
+            "Jízda otáčivou kabinou lanovky & pozorování kraviček na pastvinách",
+          pros: "Unikátní otočná lanovka, nádherná příroda a volně se pasoucí kravičky.",
+          cons: "Nahoře je větrněji a chladněji — nutné mikiny!",
+          price: "Cca 60–75 € rodinné vstupné",
+          maps: "https://maps.app.goo.gl/4qxmJ2cRxCFygcrz6",
+        },
+        {
+          id: "flora",
+          name: "Bar Gelateria Flora®",
+          cat: "gastro",
+          dayKey: "st",
+          dayInfo: "Středa & Sobota (Odpoledne)",
+          address: "Riva del Garda (Viale Rovereto 52)",
+          mustDo:
+            "Obří zmrzlinové poháry (Coppa Flora, Coppa Spaghetti) & zahradní posed",
+          pros: "Legendární zmrzlina, velká palmová zahrada ideální pro děti.",
+          cons: "Bývá dost populární v odpoledních špičkách.",
+          price: "Cca 15–22 € rodina",
+          maps: "https://maps.app.goo.gl/FloraGelato",
+        },
+        {
+          id: "sangiacomo",
+          name: "Panificio San Giacomo",
+          cat: "gastro",
+          dayKey: "ct",
+          dayInfo: "Čtvrtek (Ráno)",
+          address: "Torbole (Piazza Goethe 21)",
+          mustDo:
+            "Tradiční janovská Focaccia (se solí a olivami) & čerstvé panini",
+          pros: "Tradiční pekařství s křupavým slaným pečivem na piknik.",
+          cons: "Pouze prodejní okénko/obchůdek bez velkého posezení.",
+          price: "Cca 8–12 €",
+          maps: "https://maps.app.goo.gl/JyNCK1hU7PEBLept6",
+        },
+        {
+          id: "varone",
+          name: "Varone Waterfall Cave Park",
+          cat: "atrakce",
+          dayKey: "ct",
+          dayInfo: "Čtvrtek (Dopoledne)",
+          address: "Tenno (Località Le Foci 3)",
+          mustDo: "Hřmící vodopád uvnitř skály v pláštěnkách & botanický park",
+          pros: "Vzrušující zážitek v jeskyni, osvěžující v horkém dni.",
+          cons: "Mokro a chladno — nutné mít pláštěnky nebo bundy.",
+          price: "Cca 22–26 € rodina",
+          maps: "https://maps.app.goo.gl/srUrRfcmuq5SQxpm6",
+        },
+        {
+          id: "tenno",
+          name: "Lago di Tenno & Cyklookruh Canale",
+          cat: "příroda",
+          dayKey: "ct",
+          dayInfo: "Čtvrtek (Poledne)",
+          address: "Tenno (Lago di Tenno)",
+          mustDo:
+            "Piknik u tyrkysové vody + cyklovýlet přes středověkou vesničku Canale di Tenno",
+          pros: "Krásná tyrkysová voda. Kola půjčit v Riva del Garda (Le bici di Eric & Paul) a vyvézt autem.",
+          cons: "Těsně u vody jsou schody — pro děti je lepší okruh po cestě přes Canale di Tenno.",
+          price: "Zdarma (parkovné cca 5 €)",
+          maps: "https://maps.app.goo.gl/inUhasxaANYsP8Lq9",
+        },
+        {
+          id: "arco",
+          name: "Castello di Arco",
+          cat: "památky",
+          dayKey: "ct",
+          dayInfo: "Čtvrtek (Podvečer)",
+          address: "Arco (Via Castello)",
+          mustDo: "Výstup k hradní věži mezi olivovníky & pohled na údolí",
+          pros: "Pravý hrad pro malé princezny s krásnými výhledy.",
+          cons: "Výstup do kopce zabere cca 20 minut výšlapu.",
+          price: "Cca 10 € (děti zdarma)",
+          maps: "https://maps.app.goo.gl/vKZZjdkK7EzqfMkr9",
+        },
+        {
+          id: "rialto",
+          name: "Restaurant Rialto",
+          cat: "gastro",
+          dayKey: "ct",
+          dayInfo: "Čtvrtek (Večeře)",
+          address: "Riva del Garda (Viale Rovereto 63)",
+          mustDo:
+            "Čerstvé jezerní ryby (Coregone/Trota del Garda) & domácí gnocchi",
+          pros: "Výborná lokální kuchyně a přátelská obsluha.",
+          cons: "Mírně vyšší cena u čerstvých ryb.",
+          price: "Cca 50–70 € rodina",
+          maps: "https://maps.app.goo.gl/RialtoRiva",
+        },
+        {
+          id: "limone",
+          name: "Porto Vecchio & Limone sul Garda",
+          cat: "město",
+          dayKey: "pa",
+          dayInfo: "Pátek (Dopoledne)",
+          address: "Limone sul Garda (Via Porto)",
+          mustDo: "Starý přístav, fotka u I love Limone & citrónová zmrzlina",
+          pros: "Čarovné uličky, obchůdky s citróny, krásná atmosféra.",
+          cons: "Úzké uličky bývají rušné.",
+          price: "Zdarma",
+          maps: "https://maps.app.goo.gl/WmChvGiqTVaSmF1b6",
+        },
+        {
+          id: "houselemon",
+          name: "House of Lemonade and Spritz",
+          cat: "gastro",
+          dayKey: "pa",
+          dayInfo: "Pátek (Oběd)",
+          address: "Limone sul Garda (Via Porto 11)",
+          mustDo: "Čerstvá domácí citrónová limonáda pro děti & Aperol Spritz",
+          pros: "Osvěžující nápoje z čerstvých citrónů přímo v přístavu.",
+          cons: "Méně míst na sezení přímo u stánku.",
+          price: "Cca 10–15 €",
+          maps: "https://maps.app.goo.gl/LemonadeLimone",
+        },
+        {
+          id: "molo",
+          name: "Molo Al Buongusto",
+          cat: "gastro",
+          dayKey: "pa",
+          dayInfo: "Pátek (Oběd)",
+          address: "Limone sul Garda (Via Porto 17)",
+          mustDo:
+            "Pasta allo Scoglio (těstoviny s mořskými plody) & Fritto Misto",
+          pros: "Skvělý výhled přímo na přístav a čerstvé suroviny.",
+          cons: "Atraktivní lokace, v poledne rušněji.",
+          price: "Cca 45–60 € rodina",
+          maps: "https://maps.app.goo.gl/MoloBuongusto",
+        },
+        {
+          id: "ledro",
+          name: "Lago di Ledro & Cyklovýlet (10 km)",
+          cat: "atrakce",
+          dayKey: "pa",
+          dayInfo: "Pátek (Odpoledne)",
+          address: "Molina di Ledro (Via al Lago 1)",
+          mustDo:
+            "Pravěké kůlové domky Museo delle Palafitte + 10km okruh kolem jezera na kolech",
+          pros: "Půjčovna dětských kol/vozíků Beach & Bike Rent. Rovinatá cyklostezka bez aut.",
+          cons: "Při chladnějším počasí fouká od jezera.",
+          price: "Cca 10 € museum + půjčení kol cca 25–35 €",
+          maps: "https://maps.app.goo.gl/rtZSp2PV12LKKKS56",
+        },
+        {
+          id: "centrale",
+          name: "Pizzeria Centrale / al Porto",
+          cat: "gastro",
+          dayKey: "pa",
+          dayInfo: "Pátek (Večeře)",
+          address: "Torbole (Piazza Goethe 18)",
+          mustDo:
+            "Insalata di Polpo (chobotnicový salát) & křupavá pizza z kamenné pece",
+          pros: "Příjemné posezení u přístavu v Torbole po cyklistickém dni.",
+          cons: "Večer je lepší zarezervovat stůl.",
+          price: "Cca 45–60 € rodina",
+          maps: "https://maps.app.goo.gl/CentraleTorbole",
+        },
+      ];
+
+      const itinerary = {
+        ut: {
+          title: "Úterý — Příjezd do Camping Brione, Výtah & Cornetto",
+          items: [
+            {
+              time: "14:30",
+              drive: "🚗 Příjezd z ČR ➔ Camping Brione (Via Brione 32)",
+              dist: "0 km (Start)",
+              name: "Ubytování v Camping Brione",
+              desc: "Příjezd do kempu, zabydlení v mobilheimu/bungalovu, děti si vyzkouší bazén a hřiště.",
+              id: "",
+            },
+            {
+              time: "15:30",
+              drive: "🚶 Pěšky (nebo 🚗 auta 3 min) z Camping Brione",
+              dist: "1,2 km (cca 3 min / 15 min pěšky)",
+              name: "DelPane Bakery — První Cornetto",
+              desc: "První odpolední sladká zastávka na pistáciové cornetti a kávu.",
+              id: "delpane",
+            },
+            {
+              time: "16:30",
+              drive: "🚗 Přejezd z pekařství k parkovišti v centru",
+              dist: "1,8 km (cca 5 min)",
+              name: "Bastione di Riva — Skleněný Výtah",
+              desc: "Jízda moderním panoramatickým výtahem na pevnost s vyhlídkou.",
+              id: "bastione",
+            },
+            {
+              time: "18:00",
+              drive: "🚗 Přejezd z výtahu k pláži",
+              dist: "1,5 km (cca 4 min)",
+              name: "Bar dei pini — Relax u vody",
+              desc: "Pohodový podvečer na travnaté pláži u vody, děti si poběhají v parku.",
+              id: "pini",
+            },
+            {
+              time: "19:30",
+              drive: "🚗 Přejezd z pláže do centra pizzerie",
+              dist: "1,1 km (cca 3 min)",
+              name: "Ristorante Pizzeria Leon d'Oro",
+              desc: "Večeře v tradiční pizzerii. Zpět do kempu Brione potom jen 1,9 km (5 min).",
+              id: "leondoro",
+            },
+          ],
+        },
+        st: {
+          title: "Středa — Horské Monte Baldo & Obří Poháry u Flory",
+          items: [
+            {
+              time: "09:00",
+              drive: "🚗 Z Camping Brione po východním břehu jezera (SS249)",
+              dist: "17,2 km (cca 25 min)",
+              name: "Funivia Malcesine-Monte Baldo",
+              desc: "Výjezd otáčivou lanovkou nahoru za kravičkami a výhledy na celé jezero.",
+              id: "funivia",
+            },
+            {
+              time: "12:30",
+              drive: "🚗 Přejezd z lanovky do historického centra",
+              dist: "0,9 km (cca 2 min)",
+              name: "Malcesine — Staré město & Oběd",
+              desc: "Klidná procházka historickým přístavem a oběd pod hradem Scaligerů.",
+              id: "",
+            },
+            {
+              time: "16:00",
+              drive: "🚗 Přejezd z Malcesine po silnici směrem na Nago-Torbole",
+              dist: "13,5 km (cca 18 min)",
+              name: "Vyhlídka Panorama Sul Garda",
+              desc: "Krátká fotozastávka u silnice s výhledem na celé severní jezero.",
+              id: "",
+            },
+            {
+              time: "17:00",
+              drive: "🚗 Přejezd z vyhlídky směrem k hotelu/kavárně Flora",
+              dist: "4,1 km (cca 7 min)",
+              name: "Bar Gelateria Flora® — Velké Gelato",
+              desc: "Relaxace v palmové zahradě nad obřími zmrzlinovými poháry (jen 400 m od kempu Brione!).",
+              id: "flora",
+            },
+          ],
+        },
+        ct: {
+          title: "Čtvrtek — Jeskynní Vodopád Varone, Lago di Tenno & Kola",
+          items: [
+            {
+              time: "08:30",
+              drive: "🚗 Z Camping Brione směrem do Torbole",
+              dist: "2,8 km (cca 5 min)",
+              name: "Panificio San Giacomo — Nákup na piknik",
+              desc: "Ranní nákup čerstvé slané focaccie na rodinný výlet.",
+              id: "sangiacomo",
+            },
+            {
+              time: "09:30",
+              drive: "🚗 Z pekařství Torbole k vodopádům Varone",
+              dist: "6,2 km (cca 10 min)",
+              name: "Varone Waterfall Cave Park",
+              desc: "Zážitkový hřmící vodopád v jeskyni v pláštěnkách.",
+              id: "varone",
+            },
+            {
+              time: "11:30",
+              drive: "🚗 Z Varone do kopce k jezeru Tenno",
+              dist: "8,1 km (cca 12 min)",
+              name: "Lago di Tenno & Cyklookruh Canale",
+              desc: "Pohodové odpoledne u tyrkysové vody, piknik + projížďka na kolech přes kamennou vesničku Canale di Tenno (doporučeno půjčit e-biky/kola v Riva del Garda).",
+              id: "tenno",
+            },
+            {
+              time: "15:30",
+              drive: "🚗 Z jezera Tenno dolů do městečka Arco",
+              dist: "9,4 km (cca 14 min)",
+              name: "Castello di Arco — Hrad pro princezny",
+              desc: "Nenáročný výstup mezi olivovníky k pohádkové hradní věži.",
+              id: "arco",
+            },
+            {
+              time: "18:30",
+              drive: "🚗 Z Arca do restaurace v Riva del Garda",
+              dist: "5,3 km (cca 9 min)",
+              name: "Večeře v Restaurant Rialto",
+              desc: "Rybí speciality z jezera Garda a gnocchi pro děti. Zpět do kempu Brione cca 600 m.",
+              id: "rialto",
+            },
+          ],
+        },
+        pa: {
+          title: "Pátek — Citrónové Limone & Cyklovýlet kolem Lago di Ledro",
+          items: [
+            {
+              time: "09:30",
+              drive:
+                "🚗 Z Camping Brione přes skalní tunely západního břehu (SS45bis)",
+              dist: "12,8 km (cca 16 min)",
+              name: "Porto Vecchio Limone & I love Limone",
+              desc: "Procházka citrónovým městečkem, obchůdky a fotopoint u vody.",
+              id: "limone",
+            },
+            {
+              time: "12:00",
+              drive: "🚶 Pěšky v přístavu Limone",
+              dist: "0,1 km (pěšky)",
+              name: "House of Lemonade & Molo Al Buongusto",
+              desc: "Čerstvá citronáda pro děti + mořské těstoviny k obědu u vody.",
+              id: "houselemon",
+            },
+            {
+              time: "14:30",
+              drive: "🚗 Z Limone nahoru k horskému jezeru Ledro (SS240)",
+              dist: "18,6 km (cca 24 min)",
+              name: "Lago di Ledro — Palafitte & Cyklovýlet (10 km)",
+              desc: "Kůlové stavby Museo delle Palafitte + zapůjčení kol v Beach & Bike Rent a pohodový 10km okruh kolem jezera bez aut.",
+              id: "ledro",
+            },
+            {
+              time: "18:30",
+              drive: "🚗 Z jezera Ledro dolů k jezeru Garda do Torbole",
+              dist: "15,1 km (cca 20 min)",
+              name: "Pizzeria Centrale / al Porto (Torbole)",
+              desc: "Večeře u přístavu v Torbole po cyklistickém dni. Zpět do kempu Brione pak jen 2,1 km (4 min).",
+              id: "centrale",
+            },
+          ],
+        },
+        so: {
+          title: "Sobota — Poslední Cornetto & Rozloučení",
+          items: [
+            {
+              time: "09:00",
+              drive: "🚗 Z Camping Brione k pekařství",
+              dist: "1,2 km (cca 3 min)",
+              name: "DelPane Bakery — Poslední pistáciové cornetto",
+              desc: "Snídaňové rozloučení s nejlepšími croissanty.",
+              id: "delpane",
+            },
+            {
+              time: "10:00",
+              drive: "🚗 Z pekařství k parku u jezera",
+              dist: "0,8 km (cca 2 min)",
+              name: "Nábřeží v Riva del Garda & Hřiště",
+              desc: "Pohodový nákup suvenýrů a dětské hřiště v parku u vody.",
+              id: "",
+            },
+            {
+              time: "11:30",
+              drive: "🚗 Z parku k Bar Gelateria Flora",
+              dist: "0,5 km (cca 1 min)",
+              name: "Bar Gelateria Flora® — Zmrzlina na cestu",
+              desc: "Poslední kopeček vyhlášené zmrzliny a odjezd domů z Camping Brione.",
+              id: "flora",
+            },
+          ],
+        },
+      };
+
+      let currentDay = "ut";
+
+      // --- NAVŠTÍVENÉ POLOŽKY (localStorage) ---
+      // Klíč položky: "<den>-<čas>", např. "ut-15:30"
+      let doneItems = new Set();
+      try {
+        doneItems = new Set(
+          JSON.parse(localStorage.getItem("garda_done_items") || "[]"),
+        );
+      } catch (e) {}
+
+      function itemKey(dayKey, item) {
+        return `${dayKey}-${item.time}`;
+      }
+
+      function toggleItem(key) {
+        if (doneItems.has(key)) doneItems.delete(key);
+        else doneItems.add(key);
+        try {
+          localStorage.setItem(
+            "garda_done_items",
+            JSON.stringify([...doneItems]),
+          );
+        } catch (e) {}
+
+        const isDone = doneItems.has(key);
+        document
+          .querySelectorAll(`[data-item-key="${key}"]`)
+          .forEach((card) => {
+            card.classList.toggle("is-done", isDone);
+            card
+              .querySelector(".check-box")
+              .setAttribute("aria-checked", isDone);
+          });
+        updateProgress();
+        if (
+          !document.getElementById("tab-progress").classList.contains("hidden")
+        ) {
+          renderProgressPage();
+        }
+      }
+
+      function getProgressStats() {
+        const total = Object.entries(itinerary).reduce(
+          (sum, [, day]) => sum + day.items.length,
+          0,
+        );
+        let done = 0;
+        Object.entries(itinerary).forEach(([dayKey, day]) => {
+          day.items.forEach((item) => {
+            if (doneItems.has(itemKey(dayKey, item))) done++;
+          });
+        });
+        return {
+          done,
+          total,
+          percent: total ? Math.round((done / total) * 100) : 0,
+        };
+      }
+
+      function updateProgress() {
+        document.getElementById("progress-percent").innerText =
+          `${getProgressStats().percent}%`;
+      }
+
+      // Vrací { dayName: 'Úterý', dayProgram: '...', formattedDate: '27. 10.' }
+      function getDayLabel(dayKey) {
+        const dateParts = dayDates[dayKey].split("-");
+        const formattedDate = `${parseInt(dateParts[2])}. ${parseInt(dateParts[1])}.`;
+        // Titulek je ve tvaru "Úterý — Program dne"
+        const [dayName, ...rest] = itinerary[dayKey].title.split(" — ");
+        return { dayName, dayProgram: rest.join(" — "), formattedDate };
+      }
+
+      function openProgress() {
+        switchTab("progress");
+        renderProgressPage();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function renderProgressPage() {
+        const { done, total, percent } = getProgressStats();
+
+        // Seskupí položky podle dne, filtr rozhoduje navštíveno / naplánováno
+        const renderGroup = (wantDone) => {
+          let html = "";
+          Object.entries(itinerary).forEach(([dayKey, day]) => {
+            const rows = day.items.filter(
+              (item) => doneItems.has(itemKey(dayKey, item)) === wantDone,
+            );
+            if (rows.length === 0) return;
+            const { dayName, formattedDate } = getDayLabel(dayKey);
+            html += `<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 pt-1 px-1">${dayName} · ${formattedDate}</div>`;
+            rows.forEach((item) => {
+              const key = itemKey(dayKey, item);
+              html += `
+                            <div data-item-key="${key}" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-3 flex items-center gap-3">
+                                <button onclick="toggleItem('${key}')" class="check-box" role="checkbox" aria-checked="${wantDone}" aria-label="Navštíveno">
+                                    <i class="fa-solid fa-check"></i>
+                                </button>
+                                <button onclick="goToDay('${dayKey}')" class="flex-1 min-w-0 text-left flex items-center gap-2">
+                                    <div class="flex-1 min-w-0">
+                                        <div class="text-sm font-bold ${wantDone ? "text-slate-500" : "text-slate-800"} truncate">${item.name}</div>
+                                        <div class="text-[11px] text-slate-400 font-medium">${item.time}</div>
+                                    </div>
+                                    <i class="fa-solid fa-chevron-right text-slate-300 text-xs"></i>
+                                </button>
+                            </div>
+                        `;
+            });
+          });
+          return html;
+        };
+
+        const visitedHtml = renderGroup(true);
+        const plannedHtml = renderGroup(false);
+
+        document.getElementById("progress-content").innerHTML = `
+                <div class="bg-gradient-to-br from-teal-700 to-emerald-800 text-white p-5 rounded-3xl shadow-md space-y-3">
+                    <button onclick="goToDay(currentDay)" class="text-xs font-bold text-teal-100 hover:text-white flex items-center gap-1.5">
+                        <i class="fa-solid fa-arrow-left"></i> Zpět na itinerář
+                    </button>
+                    <div class="flex items-end justify-between gap-3">
+                        <div>
+                            <h2 class="text-xl font-extrabold">Náš pokrok</h2>
+                            <p class="text-xs text-teal-100">${done} z ${total} zastávek navštíveno</p>
+                        </div>
+                        <span class="text-3xl font-black text-amber-300">${percent}%</span>
+                    </div>
+                    <div class="h-2 bg-white/15 rounded-full overflow-hidden">
+                        <div class="h-full bg-amber-300 rounded-full transition-all" style="width: ${percent}%"></div>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2 px-1">
+                        <i class="fa-solid fa-circle-check text-teal-600"></i> Navštíveno
+                        <span class="bg-teal-50 text-teal-700 text-[11px] px-2 py-0.5 rounded-full">${done}</span>
+                    </h3>
+                    ${visitedHtml || `<div class="bg-white/80 p-5 rounded-2xl text-center text-xs text-slate-400 border border-dashed border-slate-200">Zatím jsme nikde nebyli — odškrtávejte místa v itineráři.</div>`}
+                </div>
+
+                <div class="space-y-2">
+                    <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2 px-1">
+                        <i class="fa-regular fa-calendar text-blue-600"></i> Naplánováno
+                        <span class="bg-blue-50 text-blue-700 text-[11px] px-2 py-0.5 rounded-full">${total - done}</span>
+                    </h3>
+                    ${plannedHtml || `<div class="bg-white/80 p-5 rounded-2xl text-center text-xs text-slate-400 border border-dashed border-slate-200">Všechno splněno! 🎉</div>`}
+                </div>
+            `;
+      }
+
+      function renderDay(dayKey) {
+        const dayData = itinerary[dayKey];
+        const dateStr = dayDates[dayKey];
+        const w = weatherDataMap[dateStr];
+        const container = document.getElementById("day-content");
+        const { dayName, dayProgram, formattedDate } = getDayLabel(dayKey);
+
+        let weatherHtml = "";
+        if (w) {
+          weatherHtml = `
+                    <div class="flex items-center gap-2 bg-white/10 border border-white/15 pl-2.5 pr-3 py-1.5 rounded-full shrink-0" title="Předpověď pro Riva del Garda: ${w.desc}, srážky ${w.precip} mm">
+                        <i class="fa-solid ${w.icon} text-sm"></i>
+                        <span class="text-[11px] font-semibold text-teal-50">${w.desc}</span>
+                        <span class="text-xs font-extrabold">${w.maxTemp}°<span class="text-teal-300 font-semibold">/${w.minTemp}°</span></span>
+                        ${w.precip > 0 ? `<span class="text-[10px] font-semibold text-sky-200"><i class="fa-solid fa-droplet mr-0.5"></i>${w.precip} mm</span>` : ""}
+                    </div>
+                `;
+        } else {
+          let weatherMsg =
+            '<i class="fa-solid fa-spinner fa-spin"></i> Načítám počasí';
+          if (weatherStatus === "error") {
+            weatherMsg =
+              '<i class="fa-solid fa-triangle-exclamation"></i> Počasí nedostupné';
+          } else if (weatherStatus === "done") {
+            weatherMsg =
+              '<i class="fa-regular fa-calendar"></i> Předpověď zatím není';
+          }
+          weatherHtml = `
+                    <div class="flex items-center gap-1.5 bg-white/10 border border-white/15 px-3 py-1.5 rounded-full text-[11px] font-medium text-teal-100 shrink-0">
+                        ${weatherMsg}
+                    </div>
+                `;
+        }
+
+        let html = `
+                <div class="bg-teal-800 text-white p-4 rounded-2xl shadow-sm space-y-2">
+                    <div class="flex items-center justify-between gap-2 flex-wrap">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-teal-200">${dayName} · ${formattedDate}</span>
+                        ${weatherHtml}
+                    </div>
+                    <h2 class="text-lg font-extrabold leading-snug">${dayProgram || dayName}</h2>
+                </div>
+            `;
+
+        dayData.items.forEach((item) => {
+          const matchedPlace = places.find((p) => p.id === item.id);
+          const uniqueToggleId = `toggle-${dayKey}-${Math.random().toString(36).substr(2, 5)}`;
+          const key = itemKey(dayKey, item);
+          const isDone = doneItems.has(key);
+
+          html += `
+                    <div data-item-key="${key}" class="itin-card ${isDone ? "is-done" : ""} bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden transition-all hover:border-teal-300">
+                        <div class="p-4 flex gap-3">
+                            <button onclick="toggleItem('${key}')" class="check-box" role="checkbox" aria-checked="${isDone}" aria-label="Navštíveno">
+                                <i class="fa-solid fa-check"></i>
+                            </button>
+                        <div class="dim-when-done flex-1 min-w-0 space-y-2">
+                            <div class="flex justify-between items-start gap-2">
+                                <span class="bg-teal-50 text-teal-700 text-[11px] font-bold px-2.5 py-1 rounded-xl shrink-0">${item.time}</span>
+                                ${
+                                  matchedPlace
+                                    ? `
+                                    <button onclick="goToDay('${matchedPlace.dayKey}')" class="bg-blue-50 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-lg hover:bg-blue-100 transition-all text-right">
+                                        🗓️ Naplánováno
+                                    </button>
+                                `
+                                    : ""
+                                }
+                            </div>
+
+                            ${
+                              item.drive
+                                ? `
+                                <div class="text-[11px] font-semibold text-amber-900 bg-amber-50 px-2.5 py-1.5 rounded-xl border border-amber-200/80 flex items-center justify-between gap-1.5">
+                                    <span class="flex items-center gap-1.5"><i class="fa-solid fa-car text-amber-600"></i> ${item.drive}</span>
+                                    <span class="bg-amber-200/80 text-amber-950 font-extrabold px-2 py-0.5 rounded-md text-[10px] shrink-0">📍 ${item.dist}</span>
+                                </div>
+                            `
+                                : ""
+                            }
+
+                            <div>
+                                <h3 class="text-base font-bold text-slate-800">${item.name}</h3>
+                                ${matchedPlace ? `<p class="text-[11px] text-slate-500 font-medium mt-0.5"><i class="fa-solid fa-location-dot text-rose-500 mr-1"></i>${matchedPlace.address}</p>` : ""}
+                            </div>
+
+                            <p class="text-xs text-slate-600 leading-relaxed">${item.desc}</p>
+                        </div>
+                        </div>
+
+                        ${
+                          matchedPlace
+                            ? `
+                            <div id="${uniqueToggleId}" class="dim-when-done hidden px-4 pb-4 pt-1 space-y-2 border-t border-slate-100 bg-slate-50/50 text-[11px]">
+                                <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200/80 text-amber-900">
+                                    <strong>💡 Co vyzkoušet & Bestseller:</strong> ${matchedPlace.mustDo}
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="bg-emerald-50 text-emerald-800 p-2 rounded-xl border border-emerald-100"><strong>👍 Pro děti:</strong> ${matchedPlace.pros}</div>
+                                    <div class="bg-rose-50 text-rose-800 p-2 rounded-xl border border-rose-100"><strong>⚠️ Mínusy:</strong> ${matchedPlace.cons}</div>
+                                </div>
+                                <div class="flex justify-between items-center pt-1">
+                                    <span class="text-[10px] text-slate-500 font-medium">💰 ${matchedPlace.price}</span>
+                                    <a href="${matchedPlace.maps}" target="_blank" class="bg-teal-600 text-white px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1 hover:bg-teal-700">
+                                        <i class="fa-solid fa-location-arrow"></i> Navigovat
+                                    </a>
+                                </div>
+                            </div>
+
+                            <button onclick="toggleDetails('${uniqueToggleId}', this)" class="dim-when-done w-full bg-slate-100/80 hover:bg-slate-200/70 text-slate-700 py-2 px-4 text-xs font-bold flex items-center justify-between border-t border-slate-200/80 transition-all">
+                                <span>Zobrazit detaily & bestsellery</span>
+                                <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                            </button>
+                        `
+                            : ""
+                        }
+                    </div>
+                `;
+        });
+
+        container.innerHTML = html;
+      }
+
+      function toggleDetails(id, btn) {
+        const el = document.getElementById(id);
+        const icon =
+          btn.querySelector(".fa-chevron-down") ||
+          btn.querySelector(".fa-chevron-up");
+        const label = btn.querySelector("span");
+
+        if (el.classList.contains("hidden")) {
+          el.classList.remove("hidden");
+          label.innerText = "Skrýt detaily";
+          if (icon) {
+            icon.classList.remove("fa-chevron-down");
+            icon.classList.add("fa-chevron-up");
+          }
+        } else {
+          el.classList.add("hidden");
+          label.innerText = "Zobrazit detaily & bestsellery";
+          if (icon) {
+            icon.classList.remove("fa-chevron-up");
+            icon.classList.add("fa-chevron-down");
+          }
+        }
+      }
+
+      function switchDay(dayKey) {
+        currentDay = dayKey;
+        document.querySelectorAll(".day-btn").forEach((btn) => {
+          btn.classList.remove("bg-teal-700", "text-white");
+          btn.classList.add("text-slate-500");
+        });
+        const activeBtn = document.getElementById(`day-btn-${dayKey}`);
+        if (activeBtn) {
+          activeBtn.classList.add("bg-teal-700", "text-white");
+          activeBtn.classList.remove("text-slate-500");
+        }
+        renderDay(dayKey);
+      }
+
+      function goToDay(dayKey) {
+        switchTab("plan");
+        switchDay(dayKey);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function renderPlaces() {
+        const container = document.getElementById("places-container");
+        let html = "";
+        places.forEach((p) => {
+          const uniqueToggleId = `place-toggle-${p.id}`;
+          html += `
+                    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+                        <div class="p-4 space-y-2">
+                            <div class="flex justify-between items-start gap-2">
+                                <button onclick="goToDay('${p.dayKey}')" class="bg-blue-50 text-blue-700 text-[11px] font-bold px-2.5 py-1 rounded-xl hover:bg-blue-100 transition-all text-left">
+                                    🗓️ Naplánováno: ${p.dayInfo} ➔
+                                </button>
+                                <a href="${p.maps}" target="_blank" class="bg-teal-50 text-teal-700 px-2.5 py-1 rounded-xl text-xs font-bold flex items-center gap-1 shrink-0">
+                                    <i class="fa-solid fa-location-arrow"></i> Mapa
+                                </a>
+                            </div>
+
+                            <div>
+                                <h3 class="text-base font-bold text-slate-800">${p.name}</h3>
+                                <p class="text-[11px] text-slate-500 font-medium"><i class="fa-solid fa-location-dot text-rose-500 mr-1"></i>${p.address}</p>
+                            </div>
+
+                            <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200/60 text-xs text-amber-900">
+                                <strong>💡 Co vyzkoušet & Bestseller:</strong> ${p.mustDo}
+                            </div>
+                        </div>
+
+                        <div id="${uniqueToggleId}" class="hidden px-4 pb-4 pt-1 space-y-2 border-t border-slate-100 bg-slate-50/50 text-[11px]">
+                            <div class="grid grid-cols-2 gap-2">
+                                <div class="bg-emerald-50 text-emerald-800 p-2 rounded-xl"><strong>👍 Pro děti:</strong> ${p.pros}</div>
+                                <div class="bg-rose-50 text-rose-800 p-2 rounded-xl"><strong>⚠️ Mínusy:</strong> ${p.cons}</div>
+                            </div>
+                            <div class="text-[11px] text-slate-500 pt-1">💰 Ceník rodina: <strong>${p.price}</strong></div>
+                        </div>
+
+                        <button onclick="toggleDetails('${uniqueToggleId}', this)" class="w-full bg-slate-100/80 hover:bg-slate-200/70 text-slate-700 py-2 px-4 text-xs font-bold flex items-center justify-between border-t border-slate-200/80 transition-all">
+                            <span>Zobrazit detaily & bestsellery</span>
+                            <i class="fa-solid fa-chevron-down text-slate-400 text-xs transition-transform duration-200"></i>
+                        </button>
+                    </div>
+                `;
+        });
+        container.innerHTML = html;
+      }
+
+      function renderGastroList() {
+        const container = document.getElementById("gastro-list");
+        const gastroPlaces = places.filter(
+          (p) => p.cat === "gastro" && p.id !== "delpane",
+        );
+        let html = "";
+
+        gastroPlaces.forEach((p) => {
+          html += `
+                    <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2.5">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-base font-bold text-slate-800">${p.name}</h3>
+                                <p class="text-[11px] text-slate-500 font-medium"><i class="fa-solid fa-location-dot text-rose-500 mr-1"></i>${p.address}</p>
+                            </div>
+                            <a href="${p.maps}" target="_blank" class="bg-teal-50 text-teal-700 p-2 rounded-xl text-xs font-bold flex items-center gap-1 shrink-0">
+                                <i class="fa-solid fa-location-arrow"></i> Mapa
+                            </a>
+                        </div>
+                        <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200/60 text-xs text-amber-900">
+                            <strong>⭐ Bestsellery z recenzí:</strong> ${p.mustDo}
+                        </div>
+                        <button onclick="goToDay('${p.dayKey}')" class="w-full bg-blue-50 text-blue-700 p-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1 hover:bg-blue-100 transition-all">
+                            🗓️ Naplánováno: ${p.dayInfo} ➔
+                        </button>
+                    </div>
+                `;
+        });
+        container.innerHTML = html;
+      }
+
+      function switchTab(tabKey) {
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((el) => el.classList.add("hidden"));
+        document.querySelectorAll(".tab-btn").forEach((el) => {
+          el.classList.remove("bg-teal-700", "text-white");
+          el.classList.add("bg-white", "text-slate-600");
+        });
+        document.getElementById(`tab-${tabKey}`).classList.remove("hidden");
+        // Stránka pokroku nemá vlastní tlačítko v menu
+        const tabBtn = document.getElementById(`btn-tab-${tabKey}`);
+        if (tabBtn) {
+          tabBtn.classList.add("bg-teal-700", "text-white");
+          tabBtn.classList.remove("bg-white", "text-slate-600");
+        }
+      }
+
+      // --- LOGIKA POZNÁMEK (localStorage) ---
+      let userNotes = JSON.parse(
+        localStorage.getItem("garda_user_notes") || "[]",
+      );
+
+      function renderNotes() {
+        const container = document.getElementById("notes-list");
+        if (!container) return;
+
+        if (userNotes.length === 0) {
+          container.innerHTML = `<div class="bg-white/80 p-6 rounded-2xl text-center text-xs text-slate-400 border border-dashed border-slate-200">Zatím nemáte žádné uložené poznámky.</div>`;
+          return;
+        }
+
+        let html = "";
+        userNotes.forEach((note, index) => {
+          html += `
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-sm flex items-start justify-between gap-3">
+                        <p class="text-xs text-slate-700 leading-relaxed whitespace-pre-wrap">${note}</p>
+                        <button onclick="deleteNote(${index})" class="text-slate-300 hover:text-rose-500 transition-colors p-1 shrink-0">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    </div>
+                `;
+        });
+        container.innerHTML = html;
+      }
+
+      function addNote() {
+        const input = document.getElementById("note-input");
+        const text = input.value.trim();
+        if (text !== "") {
+          userNotes.unshift(text);
+          localStorage.setItem("garda_user_notes", JSON.stringify(userNotes));
+          input.value = "";
+          renderNotes();
+        }
+      }
+
+      function deleteNote(index) {
+        userNotes.splice(index, 1);
+        localStorage.setItem("garda_user_notes", JSON.stringify(userNotes));
+        renderNotes();
+      }
+
+      // Vyhledávání v loupě
+      document.getElementById("search-input").addEventListener("input", (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        if (query !== "") {
+          switchTab("places");
+          const filtered = places.filter(
+            (p) =>
+              p.name.toLowerCase().includes(query) ||
+              p.mustDo.toLowerCase().includes(query) ||
+              p.address.toLowerCase().includes(query) ||
+              p.dayInfo.toLowerCase().includes(query),
+          );
+          const container = document.getElementById("places-container");
+          if (filtered.length === 0) {
+            container.innerHTML = `<div class="bg-white p-8 rounded-2xl text-center text-xs text-slate-500">Nenalezeny žádné výsledky pro "${query}".</div>`;
+            return;
+          }
+          let html = "";
+          filtered.forEach((p) => {
+            html += `
+                        <div class="bg-white p-4 rounded-2xl border border-teal-300 shadow-md space-y-2">
+                            <div class="flex justify-between items-start gap-2">
+                                <button onclick="goToDay('${p.dayKey}')" class="bg-blue-600 text-white text-[11px] font-bold px-2.5 py-1 rounded-xl shadow-sm hover:bg-blue-700 transition-all text-left">
+                                    🗓️ Naplánováno: ${p.dayInfo} ➔
+                                </button>
+                                <a href="${p.maps}" target="_blank" class="bg-teal-50 text-teal-700 px-2 py-1 rounded-lg text-xs font-bold">
+                                    🗺️ Mapa
+                                </a>
+                            </div>
+                            <h3 class="text-base font-bold text-slate-800">${p.name}</h3>
+                            <p class="text-[11px] text-slate-500 font-medium"><i class="fa-solid fa-location-dot text-rose-500 mr-1"></i>${p.address}</p>
+                            <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-200 text-xs text-amber-900">
+                                <strong>💡 Co vyzkoušet & Bestseller:</strong> ${p.mustDo}
+                            </div>
+                        </div>
+                    `;
+          });
+          container.innerHTML = html;
+        } else {
+          renderPlaces();
+        }
+      });
+
+      // Inicializace s nahráním předpovědi pro všechny dny
+      fetchDailyWeather();
+      renderPlaces();
+      renderGastroList();
+      renderNotes();
+      updateProgress();
+    </script>
+  </body>
+</html>
