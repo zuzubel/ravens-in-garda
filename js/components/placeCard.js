@@ -1,4 +1,5 @@
 import { html } from "../utils/html.js";
+import { mapsSearchUrl } from "../utils/maps.js";
 import { categoryStripe } from "./category.js";
 import {
   placeBadge,
@@ -46,7 +47,9 @@ export function placeCard(
     <div class="p-4 space-y-2">
       <div class="dim-when-done flex items-start gap-2">
         <div class="flex flex-wrap gap-1.5">${visits.map(plannedButton)}</div>
-        <div class="ml-auto shrink-0">${mapLink(place.mapsUrl)}</div>
+        <div class="ml-auto shrink-0">
+          ${mapLink(mapsSearchUrl(place.mapsQuery))}
+        </div>
       </div>
       <div>
         ${cardTags(place, visited)}

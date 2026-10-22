@@ -45,17 +45,6 @@ export function mapLink(url) {
   </a>`;
 }
 
-export function navigateLink(url) {
-  return html` <a
-    href="${url}"
-    target="_blank"
-    rel="noopener"
-    class="bg-teal-600 text-white px-3 py-1 rounded-xl text-xs font-bold flex items-center gap-1 hover:bg-teal-700 shrink-0"
-  >
-    <i class="fa-solid fa-location-arrow"></i> Navigovat
-  </a>`;
-}
-
 // Rozbalovací detaily: panel + tlačítko. Popisek a šipku přepíná CSS podle aria-expanded.
 export function detailsPanel(id, content, extraClass = "") {
   return html` <div

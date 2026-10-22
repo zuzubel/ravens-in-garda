@@ -69,7 +69,7 @@ const FACTS = [
 ];
 
 function placeFacts(place) {
-  return html` <div class="text-[11px] text-slate-500 space-y-0.5">
+  return html` <div class="text-[11px] text-slate-500 space-y-0.5 pt-1">
     ${FACTS.filter(({ field }) => place[field]).map(
       ({ field, label }) =>
         html`<div>${label}: <strong>${place[field]}</strong></div>`,
@@ -78,16 +78,10 @@ function placeFacts(place) {
 }
 
 // Obsah rozbalovacích detailů místa — stejný v itineráři i v katalogu.
-// `withTipsBox: false`, když jsou tipy vidět už na kartě; `action` = tlačítko vpravo dole.
-export function placeDetailsContent(
-  place,
-  { withTipsBox = true, action = "" } = {},
-) {
+// `withTipsBox: false`, když jsou tipy vidět už na kartě.
+export function placeDetailsContent(place, { withTipsBox = true } = {}) {
   return html` ${withTipsBox ? tipsBox(place) : ""}
-    ${place.tips ? practicalTips(place.tips) : ""}
-    <div class="flex justify-between items-end gap-2 pt-1">
-      ${placeFacts(place)} ${action}
-    </div>`;
+  ${place.tips ? practicalTips(place.tips) : ""} ${placeFacts(place)}`;
 }
 
 // Odkaz z katalogu přímo na zastávku v itineráři

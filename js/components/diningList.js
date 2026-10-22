@@ -1,5 +1,6 @@
 // Sekce „Kde se najíst“ pod zážitky dne: gastro tipy seskupené podle lokality
 import { html } from "../utils/html.js";
+import { mapsSearchUrl } from "../utils/maps.js";
 import { categoryStripe } from "./category.js";
 import { placeDetailsContent } from "./place.js";
 import { CARD_CLASS, checkBox, detailsPanel, mapLink } from "./ui.js";
@@ -32,7 +33,9 @@ function diningRow(place, visited, detailsId) {
           >${place.bestsellers.map(({ name }) => name).join(" · ")}</span
         >
       </button>
-      <div class="dim-when-done">${mapLink(place.mapsUrl)}</div>
+      <div class="dim-when-done">
+        ${mapLink(mapsSearchUrl(place.mapsQuery))}
+      </div>
     </div>
     ${detailsPanel(detailsId, placeDetailsContent(place), "dim-when-done")}
   </div>`;

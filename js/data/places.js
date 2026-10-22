@@ -1,6 +1,7 @@
 // Katalog míst. `category`: "gastro" | "atrakce" | "příroda" | "památky" | "město"
 // Gastro podnik má `area` (lokalita z DINING_AREAS v config.js), `icon` a `bestsellers` (seznam z recenzí
 // místo řádku `mustDo`, který mají zážitky) — podle lokality se ukáže v itineráři v sekci „Kde se najíst“.
+// `mapsQuery` = název a adresa pro Google Maps (odkaz Mapa v katalogu, trasa v itineráři).
 // Volitelná pole karty v katalogu:
 // - `priority` (1 = nejvyšší) řadí místa a zobrazí štítek „Priorita N“; místa bez ní jsou až za nimi
 // - `badge` vlastní štítek nad názvem
@@ -16,7 +17,7 @@ export const places = [
     icon: "🥐",
     address: "Riva del Garda (Via Heinrich E. Thomas Mann 4)",
     price: "Cca 10–15 € za sladkosti a kávu pro celou rodinu",
-    mapsUrl: "https://maps.app.goo.gl/q7V3nYP8tKJWQ5sT9",
+    mapsQuery: "DelPane Bakery, Via Heinrich E Thomas Mann 4, Riva del Garda",
     badge: "🏆 Vítěz na Cornetti",
     intro:
       "Čerstvě pečené italské croissanty (cornetti) plněné bohatou porcí krému těsně před podáváním.",
@@ -48,9 +49,9 @@ export const places = [
     priority: 6,
     intro:
       "Moderní výtah děti určitě nadchne (a díky Garda Guest Card je jízda nahoru i dolů zdarma).",
-    address: "Riva del Garda (Via Bastione)",
+    address: "Riva del Garda (Via Monte Oro, spodní stanice výtahu)",
     mustDo: "Jízda panoramatickým skleněným výtahem & výhled na jezero",
-    mapsUrl: "https://maps.app.goo.gl/DF9AomPn5KQ4M8NCA",
+    mapsQuery: "Ascensore panoramico Bastione, Via Monte Oro, Riva del Garda",
     duration: "1–1,5 hodiny",
     guestCard: "Jízda výtahem nahoru i dolů zdarma (1 jízda pro každého).",
     tips: [
@@ -68,8 +69,7 @@ export const places = [
       "Plážový bar na pláži Purfina — snídaně, káva nebo spritz s výhledem na jezero a trávníkem pro děti.",
     address: "Riva del Garda (Viale Rovereto 1, pláž Purfina)",
     price: "Cca 10–18 €",
-    mapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=Bar+dei+pini%2C+Viale+Rovereto+1%2C+Riva+del+Garda",
+    mapsQuery: "Bar dei pini, Viale Rovereto 1, Riva del Garda",
     bestsellers: [
       {
         name: "Snídaně u vody",
@@ -94,8 +94,7 @@ export const places = [
       "Oblíbená restaurace místních ve starém městě, známá hlavně risotty, rybami z Gardy a pizzou.",
     address: "Riva del Garda (Via Fiume 28)",
     price: "Cca 45–60 € rodina",
-    mapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=Pizzeria+Leon+d%27Oro%2C+Via+Fiume+28%2C+Riva+del+Garda",
+    mapsQuery: "Ristorante Pizzeria Leon d'Oro, Via Fiume 28, Riva del Garda",
     bestsellers: [
       {
         name: "Risotto",
@@ -123,11 +122,12 @@ export const places = [
     priority: 1,
     intro:
       "Jízda rotující lanovkou je sama o sobě atrakce a volně se pasoucí zvířata na vrcholu (která se nekrmí) budou pro děti obrovským zážitkem.",
-    address: "Malcesine (Via Navene 1)",
+    address: "Malcesine (Via Navene Vecchia 12, dolní stanice lanovky)",
     mustDo:
       "Jízda otáčivou kabinou lanovky & pozorování krav, alpak a lam na pastvinách",
     price: "Cca 60–75 € rodinné vstupné",
-    mapsUrl: "https://maps.app.goo.gl/4qxmJ2cRxCFygcrz6",
+    mapsQuery:
+      "Funivia Malcesine Monte Baldo, Via Navene Vecchia 12, Malcesine",
     duration: "3–5 hodin",
     guestCard: "Neplatí (Monte Baldo je mimo region Trentino).",
     tips: [
@@ -147,8 +147,7 @@ export const places = [
       "Velká gelaterie s palmovou zahradou, proslulá obřími zmrzlinovými poháry.",
     address: "Riva del Garda (Viale Rovereto 52)",
     price: "Cca 15–22 € rodina",
-    mapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=Bar+Gelateria+Flora%2C+Viale+Rovereto+52%2C+Riva+del+Garda",
+    mapsQuery: "Bar Gelateria Flora, Viale Rovereto 52, Riva del Garda",
     bestsellers: [
       { name: "Zmrzlinové poháry", note: "Obří porce — jeden klidně na dva" },
       { name: "Tiramisu", note: "Recenze ho často doporučují" },
@@ -173,7 +172,7 @@ export const places = [
       "Pekárna s více než 35letou tradicí — sladké pečivo na snídani i focaccia na piknik.",
     address: "Torbole (Piazza Goethe 21)",
     price: "Cca 8–12 €",
-    mapsUrl: "https://maps.app.goo.gl/JyNCK1hU7PEBLept6",
+    mapsQuery: "Panificio San Giacomo, Piazza Goethe 21, Nago-Torbole",
     bestsellers: [
       { name: "Cornetti a brioške", note: "Nejčastěji doporučované" },
       { name: "Štrúdl", note: "Chválený v recenzích" },
@@ -199,7 +198,7 @@ export const places = [
     address: "Tenno (Località Le Foci 3)",
     mustDo: "Hřmící vodopád uvnitř skály v pláštěnkách & botanický park",
     price: "Cca 22–26 € rodina",
-    mapsUrl: "https://maps.app.goo.gl/srUrRfcmuq5SQxpm6",
+    mapsQuery: "Cascata del Varone, Località Le Foci 3, Tenno",
     duration: "max. 2 hodiny",
     guestCard: "Sleva na vstupném.",
     tips: [
@@ -222,7 +221,7 @@ export const places = [
     mustDo:
       "Piknik u tyrkysové vody + procházka středověkou vesničkou Canale di Tenno",
     price: "Zdarma (parkovné cca 5 €)",
-    mapsUrl: "https://maps.app.goo.gl/inUhasxaANYsP8Lq9",
+    mapsQuery: "Lago di Tenno, Tenno",
     duration: "3–4 hodiny (půl dne)",
     guestCard: "Autobus z Rivy k jezeru zdarma.",
     tips: [
@@ -243,11 +242,10 @@ export const places = [
     mustDo:
       "Procházka centrem, zmrzlina v Gelateria Tarifa & podle sil výstup na hrad s výhledem na údolí",
     price: "Město zdarma; hrad 5 € dospělý, děti do 12 let zdarma",
-    mapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=Piazza+III+Novembre%2C+38062+Arco+TN",
+    mapsQuery: "Piazza III Novembre, Arco",
     duration: "1,5–2 hodiny",
     guestCard:
-      "Autobus z Rivy do Arca (10–15 min) zdarma, vstup na hrad zdarma.",
+      "Autobus do Arca (linka 2 od kempu, 17 min) zdarma, vstup na hrad zdarma.",
     tips: [
       "Pravý hrad pro malé princezny.",
       "Výstup na hrad je cca 20 minut do kopce po štěrku.",
@@ -264,8 +262,8 @@ export const places = [
       "Hotelová restaurace s pizzou z pece na dřevo a velkými porcemi těstovin za rozumné ceny.",
     address: "Riva del Garda (Viale Rovereto 63)",
     price: "Cca 50–70 € rodina",
-    mapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=Hotel+Rialto+Ristorante+Pizzeria%2C+Viale+Rovereto+63%2C+Riva+del+Garda",
+    mapsQuery:
+      "Hotel Rialto Ristorante Pizzeria, Viale Rovereto 63, Riva del Garda",
     bestsellers: [
       {
         name: "Těstoviny (i v XXL porci)",
@@ -289,8 +287,7 @@ export const places = [
       "Pouliční stánek u přístavu s čerstvě smaženými rybami a mořskými plody s sebou.",
     address: "Riva del Garda (Piazza Catena)",
     price: "Cca 10–20 € na osobu",
-    mapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=Friggitoria+al+porto%2C+Piazza+Catena%2C+Riva+del+Garda",
+    mapsQuery: "Friggitoria al porto, Piazza Catena, Riva del Garda",
     bestsellers: [
       {
         name: "Fritto misto",
@@ -314,7 +311,7 @@ export const places = [
     address: "Limone sul Garda (Via Porto)",
     mustDo: "Starý přístav, fotka u I love Limone & citrónová zmrzlina",
     price: "Denní lodní lístek „Lago Nord“",
-    mapsUrl: "https://maps.app.goo.gl/WmChvGiqTVaSmF1b6",
+    mapsQuery: "Porto Vecchio, Via Porto 9, Limone sul Garda",
     duration: "3–4 hodiny",
     guestCard:
       "Výrazná sleva: denní lístek za 12 € místo 20,50 € (kolo v ceně).",
@@ -335,8 +332,7 @@ export const places = [
       "Okénko u přístavu s domácí limonádou a limoncello spritzem — Limone v kelímku.",
     address: "Limone sul Garda (Via Porto 17)",
     price: "Cca 5 € za nápoj",
-    mapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=House+of+Lemonade+and+Spritz%2C+Via+Porto+17%2C+Limone+sul+Garda",
+    mapsQuery: "House of Lemonade and Spritz, Via Porto 17, Limone sul Garda",
     bestsellers: [
       {
         name: "Limoncello Spritz",
@@ -363,8 +359,7 @@ export const places = [
       "Levné bistro u přístavu s pizzou, focaccií a panini — ideální na rychlý oběd.",
     address: "Limone sul Garda (Via Porto 11)",
     price: "Levné, cca 1–10 € na osobu",
-    mapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=Molo+Al+Buongusto%2C+Via+Porto+11%2C+Limone+sul+Garda",
+    mapsQuery: "Molo Al Buongusto, Via Porto 11, Limone sul Garda",
     bestsellers: [
       { name: "Pizza a focaccia", note: "Na kousky, i s sebou" },
       { name: "Panini", note: "Podle recenzí dobře zapečené" },
@@ -386,7 +381,8 @@ export const places = [
     mustDo:
       "Pravěké kůlové domky Museo delle Palafitte + 10km okruh kolem jezera na kolech",
     price: "Půjčení kol: dospělý cca 20–25 €/den, dítě 15–20 €/den",
-    mapsUrl: "https://maps.app.goo.gl/rtZSp2PV12LKKKS56",
+    mapsQuery:
+      "Museo delle Palafitte del Lago di Ledro, Via al Lago 1, Molina di Ledro",
     duration: "celý den",
     guestCard: "Vstup do Museo delle Palafitte (kůlové stavby UNESCO) zdarma.",
     tips: [
@@ -407,8 +403,7 @@ export const places = [
       "Nejlépe hodnocená restaurace v Torbole, u přístavu — velká pizza, těstoviny a obří tiramisu.",
     address: "Torbole (Piazza Goethe 18)",
     price: "Cca 45–60 € rodina",
-    mapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=Ristorante+Pizzeria+Al+Porto%2C+Piazza+Goethe+18%2C+Torbole",
+    mapsQuery: "Ristorante Pizzeria Al Porto, Piazza Goethe 18, Nago-Torbole",
     bestsellers: [
       { name: "Pizza (i s mořskými plody)", note: "Velká a bohatě obložená" },
       { name: "Tris di Pasta", note: "Ochutnávka tří těstovin" },
@@ -431,8 +426,7 @@ export const places = [
       "Malá řemeslná gelaterie v uličce Arca, podle recenzí jedna z nejlepších v okolí.",
     address: "Arco (Via Giovanni Segantini 51)",
     price: "Cca 3 € za kelímek se třemi příchutěmi",
-    mapsUrl:
-      "https://www.google.com/maps/search/?api=1&query=Gelateria+Tarifa%2C+Via+Giovanni+Segantini+51%2C+Arco",
+    mapsQuery: "Gelateria Artigianale Tarifa, Via Giovanni Segantini 51, Arco",
     bestsellers: [
       { name: "Semifreddo Kinder Pinguí", note: "Nejchválenější specialita" },
       { name: "Cremino bílé nebo černé", note: "S kousky polotekuté čokolády" },
