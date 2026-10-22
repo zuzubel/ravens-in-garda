@@ -1,4 +1,5 @@
 // Části karty místa, které se opakují v itineráři a katalogu
+import { CATEGORY_GROUPS, categoryGroupOf } from "../config.js";
 import { html } from "../utils/html.js";
 
 export function mustDoBox(text) {
@@ -22,9 +23,22 @@ export function bestsellersBox(bestsellers) {
   </div>`;
 }
 
-export function placeBadge(text) {
+// Zelený háček u místa, které jsme už navštívili
+export function visitedMark() {
   return html`<span
-    class="inline-block mb-1 bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide"
+    role="img"
+    aria-label="Navštíveno"
+    title="Navštíveno"
+    class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500 text-white shadow-sm ring-2 ring-emerald-200"
+    ><i class="fa-solid fa-check text-[10px]"></i
+  ></span>`;
+}
+
+// Štítek nad názvem místa v barvě jeho skupiny (gastro oranžově, zážitky zeleně)
+export function placeBadge(text, category) {
+  const { badge } = CATEGORY_GROUPS[categoryGroupOf(category)];
+  return html`<span
+    class="inline-block ${badge} text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide"
     >${text}</span
   >`;
 }

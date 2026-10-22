@@ -1,7 +1,10 @@
 // Katalog míst. `category`: "gastro" | "atrakce" | "příroda" | "památky" | "město"
-// Volitelné doplňky karty v katalogu: `badge` (štítek nad názvem), `description` (popis)
-// a `bestsellers` (seznam z recenzí — na kartě nahradí řádek s `mustDo`).
-// Volitelné `keywords` jsou skrytá klíčová slova — na kartě nejsou vidět, ale najde je vyhledávání.
+// Volitelná pole karty v katalogu:
+// - `priority` (1 = nejvyšší) řadí místa a zobrazí štítek „Priorita N“; místa bez ní jsou až za nimi
+// - `badge` vlastní štítek nad názvem
+// - `intro` úvodní věta karty — tipy („Co vyzkoušet“ / bestsellery) se pak přesunou do detailů
+// - `bestsellers` seznam z recenzí místo řádku s `mustDo`
+// - `keywords` skrytá klíčová slova — na kartě nejsou vidět, ale najde je vyhledávání
 export const places = [
   {
     id: "delpane",
@@ -18,7 +21,7 @@ export const places = [
     mapsUrl: "https://maps.app.goo.gl/q7V3nYP8tKJWQ5sT9",
     keywords: ["pekarna", "pekárna", "pečivo"],
     badge: "🏆 Vítěz na Cornetti",
-    description:
+    intro:
       "Čerstvě pečené italské croissanty (cornetti) plněné bohatou porcí krému těsně před podáváním.",
     bestsellers: [
       {
@@ -38,6 +41,9 @@ export const places = [
   {
     id: "bastione",
     name: "Bastione di Riva & Skleněný Výtah",
+    priority: 6,
+    intro:
+      "Moderní výtah děti určitě nadchne (a díky TGC je jízda nahoru i dolů zdarma).",
     category: "atrakce",
     dayKey: "ut",
     dayInfo: "Úterý (Podvečer)",
@@ -45,7 +51,7 @@ export const places = [
     mustDo: "Jízda panoramatickým skleněným výtahem & výhled na jezero",
     pros: "Obrovský zážitek z jízdy výtahem s průhlednou podlahou.",
     cons: "Nahoře je spíše jen plošina s kavárnou.",
-    price: "Cca 12–16 € rodina",
+    price: "Zdarma s TGC (nahoru i dolů)",
     mapsUrl: "https://maps.app.goo.gl/DF9AomPn5KQ4M8NCA",
   },
   {
@@ -77,6 +83,9 @@ export const places = [
   {
     id: "funivia",
     name: "Funivia Malcesine-Monte Baldo",
+    priority: 1,
+    intro:
+      "Jízda rotující lanovkou je sama o sobě atrakce a volně se pasoucí zvířata na vrcholu (která se nekrmí) budou pro děti obrovským zážitkem.",
     category: "atrakce",
     dayKey: "st",
     dayInfo: "Středa (Dopoledne)",
@@ -119,6 +128,9 @@ export const places = [
   {
     id: "varone",
     name: "Varone Waterfall Cave Park",
+    priority: 3,
+    intro:
+      "Akční zážitek s pláštěnkami v hlučné, mokré jeskyni s burácejícím vodopádem.",
     category: "atrakce",
     dayKey: "ct",
     dayInfo: "Čtvrtek (Dopoledne)",
@@ -132,6 +144,9 @@ export const places = [
   {
     id: "tenno",
     name: "Lago di Tenno & Cyklookruh Canale",
+    priority: 5,
+    intro:
+      "Vizuálně nádherné místo bez aut, tyrkysová voda a středověké uličky.",
     category: "příroda",
     dayKey: "ct",
     dayInfo: "Čtvrtek (Poledne)",
@@ -147,6 +162,9 @@ export const places = [
   {
     id: "arco",
     name: "Castello di Arco",
+    priority: 7,
+    intro:
+      "Čistě odpočinková zastávka bez námahy, s nejlepší zmrzlinou pro děti v Gelateria Tarifa a kávou pro rodiče. Podle sil a nálady dětí buď vyšlápneme i nahoru na hrad, nebo zůstaneme jen dole ve městě na zmrzlině.",
     category: "památky",
     dayKey: "ct",
     dayInfo: "Čtvrtek (Podvečer)",
@@ -173,6 +191,9 @@ export const places = [
   {
     id: "limone",
     name: "Porto Vecchio & Limone sul Garda",
+    priority: 4,
+    intro:
+      "Boduje hlavně obrovským zážitkem z plavby velkým trajektem. Ve městě pak děti vizuálně zaujmou citronové skleníky (Limonaia).",
     category: "město",
     dayKey: "pa",
     dayInfo: "Pátek (Dopoledne)",
@@ -212,6 +233,9 @@ export const places = [
   {
     id: "ledro",
     name: "Lago di Ledro & Cyklovýlet (10 km)",
+    priority: 2,
+    intro:
+      "Zážitek z pravěké vesnice (Museo delle Palafitte) je interaktivní a hravý. K tomu pohodová, bezpečná jízda na vypůjčených kolech podél krásného jezera.",
     category: "atrakce",
     dayKey: "pa",
     dayInfo: "Pátek (Odpoledne)",

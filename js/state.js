@@ -1,4 +1,4 @@
-import { STORAGE_KEYS, categoryGroupOf } from "./config.js";
+import { STORAGE_KEYS, TRIP, categoryGroupOf } from "./config.js";
 import { itinerary } from "./data/itinerary.js";
 import { places } from "./data/places.js";
 import { loadJson, saveJson } from "./services/storage.js";
@@ -8,7 +8,7 @@ const isStringArray = (value) =>
 
 export const state = {
   tab: "plan",
-  dayKey: itinerary[0].key,
+  dayKey: TRIP.firstDay.key,
   categoryGroup: null, // null | "zazitky" | "gastro"
   searchQuery: "",
   doneItems: new Set(loadJson(STORAGE_KEYS.doneItems, [], isStringArray)),
@@ -35,6 +35,13 @@ export function itemKey(dayKey, item) {
 
 export function isDone(dayKey, item) {
   return state.doneItems.has(itemKey(dayKey, item));
+}
+
+// Místo je navštívené, když je v itineráři odškrtnutá aspoň jedna jeho položka
+export function isPlaceVisited(placeId) {
+  return itinerary.some((day) =>
+    day.items.some((item) => item.placeId === placeId && isDone(day.key, item)),
+  );
 }
 
 export function getProgress() {

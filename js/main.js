@@ -11,6 +11,7 @@ import {
   toggleDone,
 } from "./state.js";
 import { renderGallery } from "./views/gallery.js";
+import { renderHeader } from "./views/header.js";
 import { renderNavigation } from "./views/navigation.js";
 import { renderNotes } from "./views/notes.js";
 import { renderPlaces } from "./views/places.js";
@@ -24,6 +25,12 @@ function showTab(tab) {
 
 function scrollToTop() {
   window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// Záložky, které řídí filtr kategorií
+function renderFilteredViews() {
+  renderPlan();
+  renderPlaces();
 }
 
 function toggleDetails(button) {
@@ -57,6 +64,7 @@ const actions = {
   "toggle-done": ({ key }) => {
     syncDoneState(key, toggleDone(key));
     renderHeaderProgress();
+    renderPlaces();
     if (state.tab === "progress") renderProgress();
   },
 
@@ -64,14 +72,12 @@ const actions = {
 
   "filter-category": ({ group }) => {
     toggleCategoryGroup(group);
-    renderPlan();
-    renderPlaces();
+    renderFilteredViews();
   },
 
   "clear-filter": () => {
     clearCategoryFilter();
-    renderPlan();
-    renderPlaces();
+    renderFilteredViews();
   },
 
   "add-note": () => {
@@ -115,6 +121,7 @@ async function loadWeather() {
   renderPlan();
 }
 
+renderHeader();
 renderNavigation();
 renderPlan();
 renderPlaces();

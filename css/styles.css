@@ -39,11 +39,12 @@ body {
   color: #fff;
 }
 
-/* Navštívená položka itineráře */
-.itin-card.is-done {
+/* Navštívená položka itineráře / navštívené místo v katalogu
+   (dvě třídy v selektoru, aby přebily Tailwind bg-white) */
+.card.is-done {
   background: #f1f5f9;
 }
-.itin-card.is-done .dim-when-done {
+.card.is-done .dim-when-done {
   opacity: 0.45;
   filter: grayscale(1);
 }

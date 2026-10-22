@@ -1,9 +1,10 @@
 // Obecné stavební prvky sdílené napříč záložkami
 import { html } from "../utils/html.js";
 
-// Základ bílé karty; `relative overflow-hidden` kvůli barevnému proužku vlevo
+// Základ bílé karty; `relative overflow-hidden` kvůli barevnému proužku vlevo,
+// `card` pro společný vzhled navštívené karty (`is-done`) v css/styles.css
 export const CARD_CLASS =
-  "relative overflow-hidden bg-white rounded-2xl border shadow-sm";
+  "card relative overflow-hidden bg-white rounded-2xl border shadow-sm";
 
 export function emptyState(text) {
   return html`<div

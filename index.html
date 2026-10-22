@@ -6,7 +6,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
-    <title>Lago di Garda — Rodinná dovolená (Út–So)</title>
+    <title>Lago di Garda — Rodinná dovolená</title>
     <link
       rel="icon"
       type="image/svg+xml"
@@ -33,14 +33,16 @@
     >
       <div class="max-w-xl mx-auto flex items-center justify-between">
         <div>
+          <!-- Termín a první den doplní js/views/header.js -->
           <button
+            id="trip-home"
             data-action="go-to-day"
-            data-day="ut"
             class="group text-left select-none"
           >
-            <span class="block text-teal-200 text-xs font-medium"
-              >27. 10. — 31. 10.</span
-            >
+            <span
+              id="trip-dates"
+              class="block text-teal-200 text-xs font-medium"
+            ></span>
             <h1
               class="text-2xl font-extrabold tracking-tight mt-0.5 group-hover:text-amber-200 transition-colors"
             >

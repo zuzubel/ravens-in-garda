@@ -1,3 +1,11 @@
+import { itinerary } from "./data/itinerary.js";
+
+// Termín výletu — první a poslední den itineráře
+export const TRIP = {
+  firstDay: itinerary[0],
+  lastDay: itinerary[itinerary.length - 1],
+};
+
 // Místo pro předpověď počasí
 export const WEATHER_LOCATION = {
   name: "Riva del Garda",
@@ -16,7 +24,7 @@ export const STORAGE_KEYS = {
 export const TABS = [
   {
     key: "plan",
-    label: "Itinerář (Út—So)",
+    label: `Itinerář (${TRIP.firstDay.short}—${TRIP.lastDay.short})`,
     icon: "fa-regular fa-calendar-days",
   },
   {
@@ -28,14 +36,20 @@ export const TABS = [
   { key: "notes", label: "Poznámky", emoji: "📝" },
 ];
 
-// Skupiny pro barevný proužek a filtr: gastro zvlášť, vše ostatní jsou zážitky
+// Skupiny pro barevný proužek, filtr a štítky na kartě: gastro zvlášť, vše ostatní jsou zážitky
 export const CATEGORY_GROUPS = {
   zazitky: {
     label: "Zážitky",
     stripe: "bg-emerald-500",
     tint: "bg-emerald-100",
+    badge: "bg-emerald-100 text-emerald-800",
   },
-  gastro: { label: "Gastro", stripe: "bg-amber-300", tint: "bg-amber-100" },
+  gastro: {
+    label: "Gastro",
+    stripe: "bg-amber-300",
+    tint: "bg-amber-100",
+    badge: "bg-amber-100 text-amber-800",
+  },
 };
 
 export function categoryGroupOf(category) {
