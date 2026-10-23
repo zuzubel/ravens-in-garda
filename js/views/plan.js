@@ -51,10 +51,10 @@ function weatherChip(forecast, status) {
       <i class="${icon}"></i> ${text}
     </div>`;
   }
-  const { icon, label, maxTemp, minTemp, precip } = forecast;
+  const { icon, label, maxTemp, minTemp, rainChance } = forecast;
   return html` <div
     class="flex items-center gap-2 bg-white/10 border border-white/15 pl-2.5 pr-3 py-1.5 rounded-full shrink-0"
-    title="Předpověď pro ${WEATHER_LOCATION.name}: ${label}, srážky ${precip} mm"
+    title="Předpověď pro ${WEATHER_LOCATION.name}: ${label}, šance na srážky ${rainChance} %"
   >
     <i class="fa-solid ${icon} text-sm"></i>
     <span class="text-[11px] font-semibold text-teal-50">${label}</span>
@@ -63,11 +63,9 @@ function weatherChip(forecast, status) {
         >/${minTemp}°</span
       ></span
     >
-    ${precip > 0
-      ? html`<span class="text-[10px] font-semibold text-sky-200"
-          ><i class="fa-solid fa-droplet mr-0.5"></i>${precip} mm</span
-        >`
-      : ""}
+    <span class="text-[10px] font-semibold text-sky-200"
+      ><i class="fa-solid fa-droplet mr-0.5"></i>${rainChance} %</span
+    >
   </div>`;
 }
 
