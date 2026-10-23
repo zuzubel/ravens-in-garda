@@ -27,13 +27,15 @@ js/
   components/           znovupoužitelné části UI (karty, tlačítka, legenda…)
   views/                vykreslení jednotlivých záložek
   services/             počasí (Open-Meteo) a localStorage
-  utils/                html`` šablony s escapováním, formát data
+  utils/                html`` šablony s escapováním, formát data, odkazy na Google Maps a Wikimedia Commons
 ```
 
 ## Jak upravit obsah
 
 - **Místo** přidej do `js/data/places.js` (`category: "gastro"` = oranžový proužek, ostatní zelený).
 - **Program dne** uprav v `js/data/itinerary.js`; `placeId` propojí položku s místem z katalogu.
+- **Fotka do galerie**: pole `photo` u zážitku v `js/data/places.js` (soubor z Wikimedia Commons
+  s autorem a licencí). Galerie ukáže zážitky z itineráře v pořadí programu, gastro vynechá.
 - Klíč odškrtnutí je `<den>-<čas>` — změna času položky zruší její uložené odškrtnutí.
 
 ## Klikání

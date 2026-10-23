@@ -64,6 +64,22 @@ export function placeVisits(placeId) {
   );
 }
 
+// Zážitky (ne gastro) z itineráře v pořadí programu, každé místo jen jednou — jeho první zastávka
+export function plannedExperiences() {
+  const seen = new Set();
+  const experiences = [];
+  for (const day of itinerary) {
+    for (const item of day.items) {
+      const place = item.placeId && findPlace(item.placeId);
+      if (!place || seen.has(place.id)) continue;
+      if (categoryGroupOf(place.category) !== "zazitky") continue;
+      seen.add(place.id);
+      experiences.push({ day, item, place });
+    }
+  }
+  return experiences;
+}
+
 // Místo je navštívené, když je odškrtnutá jeho zastávka v itineráři, nebo odškrtnutý gastro tip
 export function isPlaceVisited(placeId) {
   return (

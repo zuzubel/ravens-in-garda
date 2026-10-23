@@ -139,6 +139,9 @@
             na iCloudu ➔
           </a>
         </div>
+        <h3 class="text-sm font-extrabold text-slate-800 px-1">
+          Místa, která navštívíme
+        </h3>
         <div id="gallery-grid" class="grid grid-cols-2 gap-3"></div>
       </section>
 
@@ -180,5 +183,39 @@
         <div id="progress-content" class="space-y-4"></div>
       </section>
     </main>
+
+    <!-- Zvětšená fotka z galerie; zavře se klikem kamkoli nebo Esc (js/views/gallery.js) -->
+    <dialog
+      id="photo-dialog"
+      data-action="close-photo"
+      class="photo-dialog bg-transparent p-0 max-w-none max-h-none w-full h-full"
+      aria-labelledby="photo-dialog-caption"
+    >
+      <div class="w-full h-full flex flex-col items-center justify-center gap-3 p-4">
+        <button
+          class="absolute top-4 right-4 w-10 h-10 flex items-center justify-center rounded-full bg-white/15 text-white hover:bg-white/25 transition-colors"
+          aria-label="Zavřít"
+        >
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+        <img
+          id="photo-dialog-img"
+          alt=""
+          class="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl"
+        />
+        <div class="text-center space-y-1">
+          <p
+            id="photo-dialog-caption"
+            class="text-sm font-bold text-white"
+          ></p>
+          <a
+            id="photo-dialog-credit"
+            target="_blank"
+            rel="noopener"
+            class="block text-[11px] text-slate-400 hover:text-slate-200 underline-offset-2 hover:underline"
+          ></a>
+        </div>
+      </div>
+    </dialog>
   </body>
 </html>

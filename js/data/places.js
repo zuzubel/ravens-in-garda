@@ -8,6 +8,8 @@
 // - `intro` úvodní věta karty — tipy („Co vyzkoušet“ / bestsellery) se pak přesunou do detailů
 // - `tips` praktické tipy, `duration` časový odhad, `guestCard` výhoda s Garda Guest Card (v detailech)
 // - `keywords` skrytá klíčová slova — na kartě nejsou vidět, ale najde je vyhledávání
+// - `photo` fotka zážitku do Galerie z Wikimedia Commons: `file` název souboru, `author` a `license`
+//   (licence CC BY-SA vyžaduje uvést autora)
 export const places = [
   {
     id: "delpane",
@@ -52,6 +54,11 @@ export const places = [
     address: "Riva del Garda (Via Monte Oro, spodní stanice výtahu)",
     mustDo: "Jízda panoramatickým skleněným výtahem & výhled na jezero",
     mapsQuery: "Ascensore panoramico Bastione, Via Monte Oro, Riva del Garda",
+    photo: {
+      file: "Riva del Garda 002.JPG",
+      author: "JoJan",
+      license: "CC BY-SA 3.0",
+    },
     duration: "1–1,5 hodiny",
     guestCard: "Jízda výtahem nahoru i dolů zdarma (1 jízda pro každého).",
     tips: [
@@ -128,6 +135,11 @@ export const places = [
     price: "Cca 60–75 € rodinné vstupné",
     mapsQuery:
       "Funivia Malcesine Monte Baldo, Via Navene Vecchia 12, Malcesine",
+    photo: {
+      file: "Monte Baldo goldola upper station.jpg",
+      author: "Wittylama",
+      license: "CC BY-SA 4.0",
+    },
     duration: "3–5 hodin",
     guestCard: "Neplatí (Monte Baldo je mimo region Trentino).",
     tips: [
@@ -199,6 +211,11 @@ export const places = [
     mustDo: "Hřmící vodopád uvnitř skály v pláštěnkách & botanický park",
     price: "Cca 22–26 € rodina",
     mapsQuery: "Cascata del Varone, Località Le Foci 3, Tenno",
+    photo: {
+      file: "Cascata Varone - waterfall.jpg",
+      author: "H. Zell",
+      license: "CC BY-SA 3.0",
+    },
     duration: "max. 2 hodiny",
     guestCard: "Sleva na vstupném.",
     tips: [
@@ -222,6 +239,11 @@ export const places = [
       "Piknik u tyrkysové vody + procházka středověkou vesničkou Canale di Tenno",
     price: "Zdarma (parkovné cca 5 €)",
     mapsQuery: "Lago di Tenno, Tenno",
+    photo: {
+      file: "Tenno Lago di Tenno 01.jpg",
+      author: "Zairon",
+      license: "CC BY-SA 4.0",
+    },
     duration: "3–4 hodiny (půl dne)",
     guestCard: "Autobus z Rivy k jezeru zdarma.",
     tips: [
@@ -243,6 +265,11 @@ export const places = [
       "Procházka centrem, zmrzlina v Gelateria Tarifa & podle sil výstup na hrad s výhledem na údolí",
     price: "Město zdarma; hrad 5 € dospělý, děti do 12 let zdarma",
     mapsQuery: "Piazza III Novembre, Arco",
+    photo: {
+      file: "Castello di Arco (TN).jpg",
+      author: "Claudio Mazzocchi",
+      license: "CC BY-SA 4.0",
+    },
     duration: "1,5–2 hodiny",
     guestCard:
       "Autobus do Arca (linka 2 od kempu, 17 min) zdarma, vstup na hrad zdarma.",
@@ -312,9 +339,13 @@ export const places = [
     mustDo: "Starý přístav, fotka u I love Limone & citrónová zmrzlina",
     price: "Denní lodní lístek „Lago Nord“",
     mapsQuery: "Porto Vecchio, Via Porto 9, Limone sul Garda",
+    photo: {
+      file: "Limone sul Garda - Porto Vecchio alla sera.jpg",
+      author: "Howwi",
+      license: "CC BY-SA 3.0",
+    },
     duration: "3–4 hodiny",
-    guestCard:
-      "Výrazná sleva: denní lístek za 12 € místo 20,50 € (kolo v ceně).",
+    guestCard: "Výrazná sleva: denní lístek za 12 € místo 20,50 €.",
     tips: [
       "Navštivte Limonaia del Castèl — uvidíte, jak se kdysi pěstovaly citrony.",
       "Autem se tu těžko parkuje — jeďte trajektem z Rivy a odpadne stres z parkování.",
@@ -383,6 +414,11 @@ export const places = [
     price: "Půjčení kol na 2–4 h: cca 8–20 € za kolo (celý den se nevyplatí)",
     mapsQuery:
       "Museo delle Palafitte del Lago di Ledro, Via al Lago 1, Molina di Ledro",
+    photo: {
+      file: "Palafitte-Lago di Ledro.jpg",
+      author: "CTHOE",
+      license: "CC BY-SA 2.0 de",
+    },
     duration: "celý den, z toho okruh na kole cca 2 h s dětmi",
     guestCard: "Vstup do Museo delle Palafitte (kůlové stavby UNESCO) zdarma.",
     tips: [
@@ -391,7 +427,7 @@ export const places = [
       "Okruh má 9,6 km a je převážně rovinatý. Mezi Molinou a Pieve vede po silnici — s dětmi jeďte raději po jižním břehu po štěrkové cestě.",
       "Při chladnějším počasí fouká od jezera.",
     ],
-    keywords: ["kolo", "kola", "kole", "cyklo", "cyklovýlet", "bike", "e-bike"],
+    keywords: ["kolo", "kola", "kole", "cyklo", "cyklovýlet", "bike"],
   },
   {
     id: "centrale",

@@ -11,7 +11,7 @@ import {
   toggleDone,
   toggleVisitedPlace,
 } from "./state.js";
-import { renderGallery } from "./views/gallery.js";
+import { closePhoto, openPhoto, renderGallery } from "./views/gallery.js";
 import { renderHeader } from "./views/header.js";
 import { renderNavigation } from "./views/navigation.js";
 import { renderNotes } from "./views/notes.js";
@@ -84,6 +84,10 @@ const actions = {
   },
 
   "toggle-details": (_, button) => toggleDetails(button),
+
+  "open-photo": ({ place }) => openPhoto(place),
+
+  "close-photo": () => closePhoto(),
 
   "filter-category": ({ group }) => {
     toggleCategoryGroup(group);

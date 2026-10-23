@@ -15,6 +15,11 @@ body {
   scrollbar-width: none;
 }
 
+/* Zvětšená fotka z galerie */
+.photo-dialog::backdrop {
+  background: rgb(15 23 42 / 0.9);
+}
+
 /* Checkbox "navštíveno" u položek itineráře */
 .check-box {
   width: 1.75rem;
