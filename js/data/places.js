@@ -209,7 +209,7 @@ export const places = [
       "Akční zážitek s pláštěnkami v hlučné, mokré jeskyni s burácejícím vodopádem.",
     address: "Tenno (Località Le Foci 3)",
     mustDo: "Hřmící vodopád uvnitř skály v pláštěnkách & botanický park",
-    price: "Cca 22–26 € rodina",
+    price: "28 € rodinné vstupné (2 dospělí + 3 děti)",
     mapsQuery: "Cascata del Varone, Località Le Foci 3, Tenno",
     photo: {
       file: "Cascata Varone - waterfall.jpg",
@@ -247,6 +247,7 @@ export const places = [
     duration: "3–4 hodiny (půl dne)",
     guestCard: "Autobus z Rivy k jezeru zdarma.",
     tips: [
+      "Tyrkysová barva je nejhezčí, když na jezero přímo svítí slunce — za jasného dne kolem poledne a brzy odpoledne. Pozdě odpoledne slunce zajde za hory a voda ztmavne, v zataženém dni je barva méně výrazná. Proto nejdřív k jezeru a do Canale až potom.",
       "S kolem se tento výlet spojit nedá — vše projdete pěšky.",
       "Vesnička Canale di Tenno je jen 15 minut chůze od jezera — úzké uličky, kamenné domy, žádná auta.",
       "Poslední týden v říjnu bývají parkoviště poloprázdná.",
@@ -334,10 +335,11 @@ export const places = [
     category: "město",
     priority: 4,
     intro:
-      "Boduje hlavně obrovským zážitkem z plavby velkým trajektem. Ve městě pak děti vizuálně zaujmou citronové skleníky (Limonaia).",
+      "Městečko pod skalami, kde děti vizuálně zaujmou citronové skleníky (Limonaia). Autem jsme pány svého času, trajektem z Rivy je zážitkem už samotná plavba.",
     address: "Limone sul Garda (Via Porto)",
     mustDo: "Starý přístav, fotka u I love Limone & citrónová zmrzlina",
-    price: "Denní lodní lístek „Lago Nord“",
+    price:
+      "Limonaia del Castèl 2 € (děti do 10 let zdarma); lodí denní lístek „Lago Nord“",
     mapsQuery: "Porto Vecchio, Via Porto 9, Limone sul Garda",
     photo: {
       file: "Limone sul Garda - Porto Vecchio alla sera.jpg",
@@ -345,10 +347,13 @@ export const places = [
       license: "CC BY-SA 3.0",
     },
     duration: "3–4 hodiny",
-    guestCard: "Výrazná sleva: denní lístek za 12 € místo 20,50 €.",
+    guestCard:
+      "Lodí výrazná sleva: denní lístek „Lago Nord“ za 12 € místo 20,50 € (kolo v ceně).",
     tips: [
-      "Navštivte Limonaia del Castèl — uvidíte, jak se kdysi pěstovaly citrony.",
-      "Autem se tu těžko parkuje — jeďte trajektem z Rivy a odpadne stres z parkování.",
+      "Navštivte Limonaia del Castèl — uvidíte, jak se kdysi pěstovaly citrony. Do 1. 11. otevřeno denně 10:00–18:00.",
+      "Autem: z kempu cca 13 km (20 min) po SS45bis tunely podél západního břehu.",
+      "Parkování: Lungolago Marconi hned u přístavu, nebo parkovací dům ve Via Caldogno na vjezdu do městečka.",
+      "Lodí (podzimní řád do 1. 11.): z Rivy v 9:40, 10:35, 12:05 a 14:25 · z Limone zpět v 11:15, 12:40, 14:30, 15:50, 16:55 a 18:05 (poslední). Plavba 35–45 min, z kempu do přístavu v Rivě 30 min pěšky.",
       "Vydejte se do uliček dál od vody — tam jsou „hidden spots“.",
       "Obchůdky s citrony a krásná atmosféra.",
     ],

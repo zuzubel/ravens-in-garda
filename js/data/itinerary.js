@@ -77,44 +77,40 @@ export const itinerary = [
     short: "Čt",
     name: "Čtvrtek",
     date: "2026-10-29",
-    title: "Lago di Tenno, Canale & trajektem do Limone",
+    title: "Limone sul Garda & Lago di Tenno",
     diningAreas: ["limone", "riva", "torbole"],
     items: [
       {
         time: "09:45",
-        until: "13:00",
+        until: "12:30",
         route: [
           {
             mode: "car",
-            text: "Autem z kempu k parkovišti u jezera (cca 5 €), odjezd v 9:20",
-            distance: "13 km",
+            text: "Autem z kempu po SS45bis do Limone, odjezd v 9:15 (parkování a časy lodí v detailech)",
+            distance: "cca 13 km",
             duration: "cca 20 min",
-          },
-        ],
-        name: "Lago di Tenno & vesnička Canale",
-        description: "Pěší procházka bez kol, oběd.",
-        placeId: "tenno",
-      },
-      {
-        time: "14:30",
-        until: "18:30",
-        route: [
-          {
-            mode: "walk",
-            text: "Pěšky z kempu do přístavu v Rivě (Piazza Catena)",
-            distance: "2,2 km",
-            duration: "cca 30 min",
-          },
-          {
-            mode: "ferry",
-            text: "Trajektem z Rivy ve 14:25, v Limone 15:10 · zpět v 18:05, v Rivě 18:50",
-            duration: "45 min",
           },
         ],
         name: "Limone sul Garda",
         description:
-          "Procházka starým přístavem Porto Vecchio a citronové skleníky.",
+          "Procházka starým přístavem Porto Vecchio a citronový skleník Limonaia del Castèl, oběd. Ráno bývá Limone na slunci, odpoledne ho dřív zastíní skály.",
         placeId: "limone",
+      },
+      {
+        time: "13:15",
+        until: "16:00",
+        route: [
+          {
+            mode: "car",
+            text: "Autem z Limone přes Rivu k parkovišti u jezera (cca 5 €), odjezd ve 12:45",
+            distance: "cca 23 km",
+            duration: "cca 35 min",
+          },
+        ],
+        name: "Lago di Tenno & vesnička Canale",
+        description:
+          "Potřebujeme sluníčko — bez slunce tyrkysová barva jezera nevynikne. Když bude slunečno jen dopoledne, prohoďte pořadí s Limone (to funguje i pod mrakem). Pěší procházka bez kol: nejdřív k jezeru, dokud na něj svítí slunce, pak do vesničky Canale. Návrat do kempu kolem 16:30, slunce zapadá v 17:09.",
+        placeId: "tenno",
       },
     ],
   },
