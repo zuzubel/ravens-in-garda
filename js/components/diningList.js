@@ -5,11 +5,14 @@ import { categoryStripe } from "./category.js";
 import { placeDetailsContent } from "./place.js";
 import { CARD_CLASS, checkBox, detailsPanel, mapLink } from "./ui.js";
 
-// Kompaktní řádek: zaškrtávátko, název s bestsellery (klik rozbalí detaily), mapa
-function diningRow(place, visited, detailsId) {
+// Kompaktní řádek: zaškrtávátko, název s bestsellery (klik rozbalí detaily), mapa.
+// Podnik, který má ten den zavřeno, je zašedlý se štítkem „Zavřeno“.
+function diningRow(place, { visited, closed, detailsId }) {
   return html` <div
     data-done-key="${place.id}"
-    class="${visited ? "is-done" : ""} ${CARD_CLASS} border-slate-200"
+    class="${visited ? "is-done" : ""} ${closed
+      ? "opacity-60"
+      : ""} ${CARD_CLASS} border-slate-200"
   >
     ${categoryStripe(place.category)}
     <div class="p-3 flex items-start gap-3">
@@ -25,6 +28,12 @@ function diningRow(place, visited, detailsId) {
         >
           <span aria-hidden="true">${place.icon}</span>
           <span class="truncate">${place.name}</span>
+          ${closed
+            ? html`<span
+                class="shrink-0 bg-rose-100 text-rose-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wide"
+                >Zavřeno</span
+              >`
+            : ""}
           <i
             class="fa-solid fa-chevron-down text-slate-400 text-[10px] transition-transform duration-200"
           ></i>
@@ -41,7 +50,7 @@ function diningRow(place, visited, detailsId) {
   </div>`;
 }
 
-export function diningSection(groups, isVisited) {
+export function diningSection(groups, isVisited, isClosed) {
   return html` <section class="space-y-3 pt-2">
     <h3
       class="text-sm font-extrabold text-slate-800 flex items-center gap-2 px-1"
@@ -57,7 +66,11 @@ export function diningSection(groups, isVisited) {
             ${label}
           </div>
           ${places.map((place) =>
-            diningRow(place, isVisited(place.id), `dining-${area}-${place.id}`),
+            diningRow(place, {
+              visited: isVisited(place.id),
+              closed: isClosed(place),
+              detailsId: `dining-${area}-${place.id}`,
+            }),
           )}
         </div>`,
     )}

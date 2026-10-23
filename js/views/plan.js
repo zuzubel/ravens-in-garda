@@ -8,6 +8,7 @@ import {
   diningGroups,
   findPlace,
   getDay,
+  isClosedOn,
   isDone,
   isPlaceVisited,
   itemKey,
@@ -105,7 +106,11 @@ export function renderPlan() {
   mount(
     "day-content",
     html` ${dayHeader(day)} ${categoryLegend(state.categoryGroup)} ${cards}
-    ${dining.length ? diningSection(dining, isPlaceVisited) : ""}
+    ${dining.length
+      ? diningSection(dining, isPlaceVisited, (place) =>
+          isClosedOn(place, day),
+        )
+      : ""}
     ${cards.length || dining.length
       ? ""
       : emptyCategoryState(state.categoryGroup)}`,

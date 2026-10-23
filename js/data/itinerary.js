@@ -67,7 +67,7 @@ export const itinerary = [
         ],
         name: "Lago di Ledro — Kola & kůlové stavby",
         description:
-          "Půjčení kol a jízda po bezpečné cyklostezce, návštěva pravěkých kůlových staveb. Návrat do Rivy v 16:30.",
+          "Slunce není nutné, hlavně ať neprší. Dopoledne půjčení kol a jízda po bezpečné cyklostezce, odpoledne pravěké kůlové stavby — muzeum je částečně uvnitř, takže schová i před deštěm. Návrat do Rivy v 16:30.",
         placeId: "ledro",
       },
     ],

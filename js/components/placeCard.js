@@ -16,17 +16,27 @@ import {
   mapLink,
 } from "./ui.js";
 
-// Řádek štítků nad názvem: háček navštíveno (nezešedne), priorita, vlastní štítek
-function cardTags(place, visited) {
-  if (!visited && !place.priority && !place.badge) return "";
-  return html` <div class="flex flex-wrap items-center gap-1.5 mb-1">
-    ${visited ? visitedMark() : ""}
-    <span class="dim-when-done flex flex-wrap items-center gap-1.5">
-      ${place.priority
-        ? placeBadge(`Priorita ${place.priority}`, place.category)
-        : ""}
-      ${place.badge ? placeBadge(place.badge, place.category) : ""}
-    </span>
+function mapButton(place) {
+  return html`<div class="dim-when-done ml-auto shrink-0">
+    ${mapLink(mapsSearchUrl(place.mapsQuery))}
+  </div>`;
+}
+
+// Horní řádek štítků: háček navštíveno (nezešedne), priorita, vlastní štítek, odkazy „Naplánováno“.
+// Karta bez štítků ho nemá, aby byla co nejkratší — mapa je pak na řádku s názvem.
+function cardTags(place, visits, visited) {
+  return html` <div class="flex items-start gap-2">
+    <div class="flex flex-wrap items-center gap-1.5">
+      ${visited ? visitedMark() : ""}
+      <span class="dim-when-done flex flex-wrap items-center gap-1.5">
+        ${place.priority
+          ? placeBadge(`Priorita ${place.priority}`, place.category)
+          : ""}
+        ${place.badge ? placeBadge(place.badge, place.category) : ""}
+        ${visits.map(plannedButton)}
+      </span>
+    </div>
+    ${mapButton(place)}
   </div>`;
 }
 
@@ -38,6 +48,8 @@ export function placeCard(
   { highlighted = false, visits = [], visited = false } = {},
 ) {
   const detailsId = `place-details-${place.id}`;
+  const hasTags =
+    visited || place.priority || place.badge || visits.length > 0;
   return html` <div
     class="${visited ? "is-done" : ""} ${CARD_CLASS} ${highlighted
       ? "border-teal-300 shadow-md"
@@ -45,18 +57,19 @@ export function placeCard(
   >
     ${categoryStripe(place.category)}
     <div class="p-4 space-y-2">
-      <div class="dim-when-done flex items-start gap-2">
-        <div class="flex flex-wrap gap-1.5">${visits.map(plannedButton)}</div>
-        <div class="ml-auto shrink-0">
-          ${mapLink(mapsSearchUrl(place.mapsQuery))}
-        </div>
-      </div>
-      <div>
-        ${cardTags(place, visited)}
-        <div class="dim-when-done">
-          <h3 class="text-base font-bold text-slate-800">${place.name}</h3>
+      ${hasTags ? cardTags(place, visits, visited) : ""}
+      <div class="flex items-start gap-2">
+        <div class="dim-when-done min-w-0">
+          <h3 class="text-base font-bold text-slate-800">
+            ${place.icon
+              ? html`<span aria-hidden="true" class="mr-1 text-lg leading-none"
+                  >${place.icon}</span
+                > `
+              : ""}${place.name}
+          </h3>
           ${addressLine(place.address)}
         </div>
+        ${hasTags ? "" : mapButton(place)}
       </div>
       <div class="dim-when-done">
         ${place.intro

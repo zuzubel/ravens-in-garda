@@ -2,6 +2,7 @@ import { DINING_AREAS, STORAGE_KEYS, TRIP, categoryGroupOf } from "./config.js";
 import { itinerary } from "./data/itinerary.js";
 import { places } from "./data/places.js";
 import { loadJson, saveJson } from "./services/storage.js";
+import { isoWeekday } from "./utils/date.js";
 
 const isStringArray = (value) =>
   Array.isArray(value) && value.every((v) => typeof v === "string");
@@ -88,13 +89,21 @@ export function isPlaceVisited(placeId) {
   );
 }
 
-// Gastro tipy dne seskupené podle lokalit, kde se ten den pohybujeme
+// Podnik má v den výletu zavírací den (`closedWeekdays` v data/places.js)
+export function isClosedOn(place, day) {
+  return place.closedWeekdays?.includes(isoWeekday(day.date)) ?? false;
+}
+
+// Gastro tipy dne seskupené podle lokalit, kde se ten den pohybujeme;
+// podniky, které mají ten den zavřeno, jsou v lokalitě až na konci
 export function diningGroups(day) {
   return (day.diningAreas ?? [])
     .map((area) => ({
       area,
       label: DINING_AREAS[area],
-      places: places.filter((place) => place.area === area),
+      places: places
+        .filter((place) => place.area === area)
+        .sort((a, b) => isClosedOn(a, day) - isClosedOn(b, day)),
     }))
     .filter(({ places: areaPlaces }) => areaPlaces.length);
 }

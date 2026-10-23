@@ -1,5 +1,6 @@
 // Části karty místa, které se opakují v itineráři a katalogu
 import { CATEGORY_GROUPS, categoryGroupOf } from "../config.js";
+import { weekdayName } from "../utils/date.js";
 import { html } from "../utils/html.js";
 
 function mustDoBox(text) {
@@ -34,7 +35,7 @@ export function visitedMark() {
   ></span>`;
 }
 
-// Štítek nad názvem místa v barvě jeho skupiny (gastro oranžově, zážitky zeleně)
+// Štítek místa (priorita, vlastní štítek) v barvě jeho skupiny (gastro oranžově, zážitky zeleně)
 export function placeBadge(text, category) {
   const { badge } = CATEGORY_GROUPS[categoryGroupOf(category)];
   return html`<span
@@ -74,6 +75,12 @@ function placeFacts(place) {
       ({ field, label }) =>
         html`<div>${label}: <strong>${place[field]}</strong></div>`,
     )}
+    ${place.closedWeekdays?.length
+      ? html`<div>
+          🚫 Zavřeno:
+          <strong>${place.closedWeekdays.map(weekdayName).join(", ")}</strong>
+        </div>`
+      : ""}
   </div>`;
 }
 

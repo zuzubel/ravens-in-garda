@@ -8,6 +8,8 @@
 // - `intro` úvodní věta karty — tipy („Co vyzkoušet“ / bestsellery) se pak přesunou do detailů
 // - `tips` praktické tipy, `duration` časový odhad, `guestCard` výhoda s Garda Guest Card (v detailech)
 // - `keywords` skrytá klíčová slova — na kartě nejsou vidět, ale najde je vyhledávání
+// - `closedWeekdays` zavírací dny podniku (1 = pondělí … 7 = neděle) — v itineráři je ten den
+//   v sekci „Kde se najíst“ zašedlý se štítkem „Zavřeno“, v detailech se ukáže „Zavřeno: …“
 // - `photo` fotka zážitku do Galerie z Wikimedia Commons: `file` název souboru, `author` a `license`
 //   (licence CC BY-SA vyžaduje uvést autora)
 export const places = [
@@ -154,7 +156,7 @@ export const places = [
     name: "Bar Gelateria Flora®",
     category: "gastro",
     area: "riva",
-    icon: "🍦",
+    icon: "🍨",
     intro:
       "Velká gelaterie s palmovou zahradou, proslulá obřími zmrzlinovými poháry.",
     address: "Riva del Garda (Viale Rovereto 52)",
@@ -310,7 +312,7 @@ export const places = [
     name: "Friggitoria al porto",
     category: "gastro",
     area: "riva",
-    icon: "🦐",
+    icon: "🐟",
     intro:
       "Pouliční stánek u přístavu s čerstvě smaženými rybami a mořskými plody s sebou.",
     address: "Riva del Garda (Piazza Catena)",
@@ -451,10 +453,11 @@ export const places = [
       { name: "Gnocchi s parmazánem a lanýžem", note: "Vřele doporučované" },
       { name: "Tiramisu", note: "Obří porce" },
     ],
+    closedWeekdays: [2],
     tips: [
       "Příjemné posezení u přístavu v Torbole.",
       "Od cca 18:30 se tvoří dlouhé fronty — rezervovat jde jen stůl uvnitř.",
-      "V úterý zavřeno.",
+      "Zavírací den není jistý — podle některých zdrojů je zavřeno ve středu, ne v úterý. Ověřte telefonem +39 0464 548884.",
     ],
   },
   {
