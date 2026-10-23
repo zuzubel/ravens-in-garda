@@ -2,7 +2,7 @@ import { DINING_AREAS, STORAGE_KEYS, TRIP, categoryGroupOf } from "./config.js";
 import { itinerary } from "./data/itinerary.js";
 import { places } from "./data/places.js";
 import { loadJson, saveJson } from "./services/storage.js";
-import { isoWeekday } from "./utils/date.js";
+import { daysUntil, isoWeekday } from "./utils/date.js";
 
 const isStringArray = (value) =>
   Array.isArray(value) && value.every((v) => typeof v === "string");
@@ -87,6 +87,29 @@ export function isPlaceVisited(placeId) {
     state.visitedPlaces.has(placeId) ||
     placeVisits(placeId).some(({ done }) => done)
   );
+}
+
+// Od jaké šance na srážky zastávka s požadavkem „sucho“ dostane upozornění
+const RAIN_CHANCE_LIMIT = 50;
+// Předpověď na víc dní dopředu je nejistá — slunce na 5 dní vychází jen asi ze dvou třetin
+const RELIABLE_FORECAST_DAYS = 3;
+
+// Předpověď dne odporuje požadavku zastávky na počasí (`weatherNeed` v data/itinerary.js):
+// "sun" chce slunečno nebo polojasno, "dry" chce den bez deště
+export function weatherWarning(day, item) {
+  const forecast = state.weather.byDate[day.date];
+  if (!item.weatherNeed || !forecast) return null;
+  const conflict =
+    item.weatherNeed === "sun"
+      ? forecast.sky !== "sunny"
+      : forecast.sky === "wet" || forecast.rainChance >= RAIN_CHANCE_LIMIT;
+  if (!conflict) return null;
+  const daysAhead = daysUntil(day.date);
+  return {
+    need: item.weatherNeed,
+    forecast,
+    uncertainDays: daysAhead > RELIABLE_FORECAST_DAYS ? daysAhead : null,
+  };
 }
 
 // Podnik má v den výletu zavírací den (`closedWeekdays` v data/places.js)

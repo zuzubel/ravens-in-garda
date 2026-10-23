@@ -1,34 +1,71 @@
 // Denní předpověď z Open-Meteo (model ECMWF), převedená na
-// { "2026-10-27": { maxTemp, minTemp, rainChance, icon, label } }
+// { "2026-10-27": { maxTemp, minTemp, rainChance, icon, label, sky } }
 
-// WMO kódy počasí → ikona a popis. Font Awesome místo emoji
-// (emoji mlhy se na Applu kreslí jako šedý rámeček).
+// WMO kódy počasí → ikona, popis a `sky` ("sunny" | "cloudy" | "wet") pro hlídání požadavků
+// zastávek na počasí. Font Awesome místo emoji (emoji mlhy se na Applu kreslí jako šedý rámeček).
 const WEATHER_CODES = [
-  { from: 1, to: 2, icon: "fa-cloud-sun text-amber-200", label: "Polojasno" },
-  { from: 3, to: 3, icon: "fa-cloud text-teal-100", label: "Zataženo" },
-  { from: 45, to: 48, icon: "fa-smog text-teal-100", label: "Mlha" },
-  { from: 51, to: 67, icon: "fa-cloud-rain text-sky-300", label: "Déšť" },
-  { from: 71, to: 77, icon: "fa-snowflake text-sky-100", label: "Sněžení" },
+  {
+    from: 1,
+    to: 2,
+    icon: "fa-cloud-sun text-amber-200",
+    label: "Polojasno",
+    sky: "sunny",
+  },
+  {
+    from: 3,
+    to: 3,
+    icon: "fa-cloud text-teal-100",
+    label: "Zataženo",
+    sky: "cloudy",
+  },
+  {
+    from: 45,
+    to: 48,
+    icon: "fa-smog text-teal-100",
+    label: "Mlha",
+    sky: "cloudy",
+  },
+  {
+    from: 51,
+    to: 67,
+    icon: "fa-cloud-rain text-sky-300",
+    label: "Déšť",
+    sky: "wet",
+  },
+  {
+    from: 71,
+    to: 77,
+    icon: "fa-snowflake text-sky-100",
+    label: "Sněžení",
+    sky: "wet",
+  },
   {
     from: 80,
     to: 82,
     icon: "fa-cloud-showers-heavy text-sky-300",
     label: "Přeháňky",
+    sky: "wet",
   },
   {
     from: 85,
     to: 86,
     icon: "fa-snowflake text-sky-100",
     label: "Sněhové přeháňky",
+    sky: "wet",
   },
   {
     from: 95,
     to: Infinity,
     icon: "fa-cloud-bolt text-amber-300",
     label: "Bouřky",
+    sky: "wet",
   },
 ];
-const CLEAR_SKY = { icon: "fa-sun text-amber-300", label: "Slunečno" };
+const CLEAR_SKY = {
+  icon: "fa-sun text-amber-300",
+  label: "Slunečno",
+  sky: "sunny",
+};
 
 function describeWeather(code) {
   return (
@@ -85,13 +122,14 @@ export async function fetchForecast({ lat, lon, timezone }) {
     const codes = codesByDate[date]?.filter((code) => code !== null);
     // za koncem předpovědi model vrací prázdné hodnoty
     if (!codes?.length || daily.temperature_2m_max[i] === null) return;
-    const { icon, label } = dominantWeather(codes);
+    const { icon, label, sky } = dominantWeather(codes);
     byDate[date] = {
       maxTemp: Math.round(daily.temperature_2m_max[i]),
       minTemp: Math.round(daily.temperature_2m_min[i]),
       rainChance: daily.precipitation_probability_max[i] ?? 0,
       icon,
       label,
+      sky,
     };
   });
   return byDate;

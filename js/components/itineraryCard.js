@@ -34,6 +34,29 @@ function routeLeg({ mode, text, distance, duration }) {
   </li>`;
 }
 
+const WEATHER_NEEDS = {
+  sun: "Potřebuje slunce",
+  dry: "Potřebuje, aby nepršelo",
+};
+
+// Upozornění, když předpověď odporuje požadavku zastávky na počasí (weatherWarning ve state.js)
+function weatherAlert({ need, forecast, uncertainDays }) {
+  const rain = need === "dry" ? `, šance na srážky ${forecast.rainChance} %` : "";
+  return html` <div
+    class="text-[11px] font-semibold text-orange-900 bg-orange-50 px-2.5 py-1.5 rounded-xl border border-orange-200 flex items-start gap-1.5"
+  >
+    <i class="fa-solid fa-triangle-exclamation text-orange-500 mt-0.5"></i>
+    <span
+      >${WEATHER_NEEDS[need]} — předpověď: ${forecast.label}${rain}.${uncertainDays
+        ? html` <span class="font-medium text-orange-700"
+            >Předpověď na ${uncertainDays} ${uncertainDays < 5 ? "dny" : "dní"}
+            dopředu je zatím nejistá.</span
+          >`
+        : ""}</span
+    >
+  </div>`;
+}
+
 function routeInfo(route) {
   return html` <ul
     class="text-[11px] font-semibold text-amber-900 bg-amber-50 px-2.5 py-1.5 rounded-xl border border-amber-200/80 space-y-1"
@@ -58,7 +81,14 @@ function placeDetails(id, place) {
 }
 
 // `data-done-key` používá plan.js pro přepnutí stavu bez překreslení karty
-export function itineraryCard({ key, item, place, done, detailsId }) {
+export function itineraryCard({
+  key,
+  item,
+  place,
+  done,
+  detailsId,
+  weatherWarning,
+}) {
   return html` <div
     data-done-key="${key}"
     class="itin-card ${done
@@ -76,6 +106,7 @@ export function itineraryCard({ key, item, place, done, detailsId }) {
           >
           ${place ? mapLink(routeUrl(place, item.route)) : ""}
         </div>
+        ${weatherWarning ? weatherAlert(weatherWarning) : ""}
         ${item.route ? routeInfo(item.route) : ""}
         <div>
           <h3 class="text-base font-bold text-slate-800">${item.name}</h3>

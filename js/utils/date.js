@@ -24,6 +24,14 @@ export function weekdayName(weekday) {
   return WEEKDAY_NAMES[weekday - 1];
 }
 
+// Kolik dní zbývá od dneška (podle místního data) do "2026-10-27"; dnes = 0
+export function daysUntil(isoDate) {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  const now = new Date();
+  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  return Math.round((Date.UTC(year, month - 1, day) - today) / 86_400_000);
+}
+
 // "2026-10-27" → 27
 export function dayOfMonth(isoDate) {
   return Number(isoDate.split("-")[2]);

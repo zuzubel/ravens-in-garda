@@ -3,6 +3,8 @@
 // `route` = přesun na zastávku po úsecích (každý na vlastním řádku): `mode` "car" | "walk" | "bus" | "ferry",
 // `text`, volitelně `distance` a `duration`. Vzdálenosti a časy z kempu, autobusy a trajekty
 // podle podzimních jízdních řádů 2026.
+// `weatherNeed` = požadavek zastávky na počasí: "sun" (slunečno nebo polojasno) | "dry" (bez deště);
+// když mu předpověď dne odporuje, karta ukáže upozornění.
 // `diningAreas` = lokality, kde se ten den pohybujeme; jejich gastro podniky (`area` v data/places.js)
 // se ukážou pod zážitky v sekci „Kde se najíst“.
 export const itinerary = [
@@ -69,6 +71,7 @@ export const itinerary = [
         description:
           "Slunce není nutné, hlavně ať neprší. Dopoledne půjčení kol a jízda po bezpečné cyklostezce, odpoledne pravěké kůlové stavby — muzeum je částečně uvnitř, takže schová i před deštěm. Návrat do Rivy v 16:30.",
         placeId: "ledro",
+        weatherNeed: "dry",
       },
     ],
   },
@@ -111,6 +114,7 @@ export const itinerary = [
         description:
           "Potřebujeme sluníčko — bez slunce tyrkysová barva jezera nevynikne. Když bude slunečno jen dopoledne, prohoďte pořadí s Limone (to funguje i pod mrakem). Pěší procházka bez kol: nejdřív k jezeru, dokud na něj svítí slunce, pak do vesničky Canale. Návrat do kempu kolem 16:30, slunce zapadá v 17:09.",
         placeId: "tenno",
+        weatherNeed: "sun",
       },
     ],
   },
@@ -135,8 +139,9 @@ export const itinerary = [
         ],
         name: "Monte Baldo — Rotující lanovka",
         description:
-          "Rotující lanovka a zvířata na vrcholu. Pak návrat do Rivy a oběd.",
+          "Potřebujeme jasno — když je vrchol v mracích, nahoře nic neuvidíte. Rotující lanovka a zvířata na vrcholu. Pak návrat do Rivy a oběd.",
         placeId: "funivia",
+        weatherNeed: "sun",
       },
       {
         time: "15:30",

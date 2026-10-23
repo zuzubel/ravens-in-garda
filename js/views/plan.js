@@ -14,6 +14,7 @@ import {
   itemKey,
   matchesCategoryFilter,
   state,
+  weatherWarning,
 } from "../state.js";
 import { dayOfMonth, formatShortDate } from "../utils/date.js";
 import { html, mount } from "../utils/html.js";
@@ -96,6 +97,7 @@ export function renderPlan() {
         place,
         done: isDone(day.key, item),
         detailsId: `itinerary-details-${day.key}-${index}`,
+        weatherWarning: weatherWarning(day, item),
       }),
     );
 
