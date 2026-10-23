@@ -24,12 +24,23 @@ export function weekdayName(weekday) {
   return WEEKDAY_NAMES[weekday - 1];
 }
 
+const pad = (number) => String(number).padStart(2, "0");
+
+// Dnešní datum podle místního času telefonu → "2026-10-27"
+export function todayIsoDate(now = new Date()) {
+  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+}
+
+function isoToUtc(isoDate) {
+  const [year, month, day] = isoDate.split("-").map(Number);
+  return Date.UTC(year, month - 1, day);
+}
+
 // Kolik dní zbývá od dneška (podle místního data) do "2026-10-27"; dnes = 0
 export function daysUntil(isoDate) {
-  const [year, month, day] = isoDate.split("-").map(Number);
-  const now = new Date();
-  const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-  return Math.round((Date.UTC(year, month - 1, day) - today) / 86_400_000);
+  return Math.round(
+    (isoToUtc(isoDate) - isoToUtc(todayIsoDate())) / 86_400_000,
+  );
 }
 
 // "2026-10-27" → 27

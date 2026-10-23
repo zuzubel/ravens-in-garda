@@ -2,9 +2,11 @@
 // Prvky v HTML ohlašují akci přes data-action (+ data-* parametry), viz `actions` níže.
 import { WEATHER_LOCATION } from "./config.js";
 import { fetchForecast } from "./services/weather.js";
+import { todayIsoDate } from "./utils/date.js";
 import {
   addNote,
   clearCategoryFilter,
+  defaultDayKey,
   deleteNote,
   state,
   toggleCategoryGroup,
@@ -139,6 +141,16 @@ async function loadWeather() {
   }
   renderPlan();
 }
+
+// Aplikace otevřená přes noc: po návratu druhý den přepne itinerář na nový den výletu
+let renderedDate = todayIsoDate();
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden || todayIsoDate() === renderedDate) return;
+  renderedDate = todayIsoDate();
+  state.dayKey = defaultDayKey();
+  renderHeader();
+  renderPlan();
+});
 
 renderHeader();
 renderNavigation();

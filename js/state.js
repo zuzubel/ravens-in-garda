@@ -2,7 +2,7 @@ import { DINING_AREAS, STORAGE_KEYS, TRIP, categoryGroupOf } from "./config.js";
 import { itinerary } from "./data/itinerary.js";
 import { places } from "./data/places.js";
 import { loadJson, saveJson } from "./services/storage.js";
-import { daysUntil, isoWeekday } from "./utils/date.js";
+import { daysUntil, isoWeekday, todayIsoDate } from "./utils/date.js";
 
 const isStringArray = (value) =>
   Array.isArray(value) && value.every((v) => typeof v === "string");
@@ -21,7 +21,7 @@ const PLACE_IDS = places.map((place) => place.id);
 
 export const state = {
   tab: "plan",
-  dayKey: TRIP.firstDay.key,
+  dayKey: defaultDayKey(),
   categoryGroup: null, // null | "zazitky" | "gastro"
   searchQuery: "",
   doneItems: loadKeySet(STORAGE_KEYS.doneItems, ITEM_KEYS), // odškrtnuté zastávky itineráře
@@ -40,6 +40,12 @@ export function findPlace(placeId) {
 
 export function getDay(dayKey) {
   return itinerary.find((day) => day.key === dayKey);
+}
+
+// Během výletu se aplikace otevírá na dnešním dni, před ním a po něm na prvním
+export function defaultDayKey() {
+  const today = todayIsoDate();
+  return (itinerary.find((day) => day.date === today) ?? TRIP.firstDay).key;
 }
 
 // Klíč položky "<den>-<začátek>", např. "ut-16:00" — takto se ukládá do localStorage

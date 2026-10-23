@@ -16,7 +16,7 @@ import {
   state,
   weatherWarning,
 } from "../state.js";
-import { dayOfMonth, formatShortDate } from "../utils/date.js";
+import { dayOfMonth, formatShortDate, todayIsoDate } from "../utils/date.js";
 import { html, mount } from "../utils/html.js";
 
 const WEATHER_STATUS = {
@@ -28,20 +28,30 @@ const WEATHER_STATUS = {
   done: { icon: "fa-regular fa-calendar", text: "Předpověď zatím není" },
 };
 
+// Dnešní den výletu má pod sebou tečku
 function daySelector(activeKey) {
-  return itinerary.map(
-    (day) =>
-      html` <button
-        data-action="switch-day"
-        data-day="${day.key}"
-        class="flex-1 py-2 text-center text-xs font-bold rounded-xl transition-all ${day.key ===
-        activeKey
-          ? "bg-teal-700 text-white"
-          : "text-slate-500"}"
-      >
-        ${day.short} ${dayOfMonth(day.date)}.
-      </button>`,
-  );
+  const today = todayIsoDate();
+  return itinerary.map((day) => {
+    const active = day.key === activeKey;
+    return html` <button
+      data-action="switch-day"
+      data-day="${day.key}"
+      class="relative flex-1 py-2 text-center text-xs font-bold rounded-xl transition-all ${active
+        ? "bg-teal-700 text-white"
+        : "text-slate-500"}"
+    >
+      ${day.short} ${dayOfMonth(day.date)}.
+      ${day.date === today
+        ? html`<span class="sr-only">(dnes)</span
+            ><span
+              class="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full ${active
+                ? "bg-white"
+                : "bg-teal-600"}"
+              aria-hidden="true"
+            ></span>`
+        : ""}
+    </button>`;
+  });
 }
 
 function weatherChip(forecast, status) {
